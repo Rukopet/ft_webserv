@@ -9,4 +9,3 @@ TEST(CheckCheck, CheckCheck_new) {
 	// simple check return value
 	assert(check() == 1);
 }
-

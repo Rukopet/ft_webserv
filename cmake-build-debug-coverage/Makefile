@@ -97,28 +97,6 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -142,6 +120,28 @@ install/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
 	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -176,19 +176,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named ft_webserverTest
-
-# Build rule for target.
-ft_webserverTest: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ft_webserverTest
-.PHONY : ft_webserverTest
-
-# fast build rule for target.
-ft_webserverTest/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/build
-.PHONY : ft_webserverTest/fast
-
-#=============================================================================
 # Target rules for targets named ft_webserver
 
 # Build rule for target.
@@ -200,6 +187,19 @@ ft_webserver: cmake_check_build_system
 ft_webserver/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/build
 .PHONY : ft_webserver/fast
+
+#=============================================================================
+# Target rules for targets named All_tests
+
+# Build rule for target.
+All_tests: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 All_tests
+.PHONY : All_tests
+
+# fast build rule for target.
+All_tests/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/build
+.PHONY : All_tests/fast
 
 #=============================================================================
 # Target rules for targets named gmock
@@ -259,7 +259,7 @@ UnitTests/Example_test.o: UnitTests/Example_test.cpp.o
 
 # target to build an object file
 UnitTests/Example_test.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/UnitTests/Example_test.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/UnitTests/Example_test.cpp.o
 .PHONY : UnitTests/Example_test.cpp.o
 
 UnitTests/Example_test.i: UnitTests/Example_test.cpp.i
@@ -268,7 +268,7 @@ UnitTests/Example_test.i: UnitTests/Example_test.cpp.i
 
 # target to preprocess a source file
 UnitTests/Example_test.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/UnitTests/Example_test.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/UnitTests/Example_test.cpp.i
 .PHONY : UnitTests/Example_test.cpp.i
 
 UnitTests/Example_test.s: UnitTests/Example_test.cpp.s
@@ -277,7 +277,7 @@ UnitTests/Example_test.s: UnitTests/Example_test.cpp.s
 
 # target to generate assembly for a file
 UnitTests/Example_test.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/UnitTests/Example_test.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/UnitTests/Example_test.cpp.s
 .PHONY : UnitTests/Example_test.cpp.s
 
 main.o: main.cpp.o
@@ -313,8 +313,8 @@ other_example_for_tests.o: other_example_for_tests.cpp.o
 
 # target to build an object file
 other_example_for_tests.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/other_example_for_tests.cpp.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/other_example_for_tests.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/other_example_for_tests.cpp.o
 .PHONY : other_example_for_tests.cpp.o
 
 other_example_for_tests.i: other_example_for_tests.cpp.i
@@ -323,8 +323,8 @@ other_example_for_tests.i: other_example_for_tests.cpp.i
 
 # target to preprocess a source file
 other_example_for_tests.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/other_example_for_tests.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/other_example_for_tests.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/other_example_for_tests.cpp.i
 .PHONY : other_example_for_tests.cpp.i
 
 other_example_for_tests.s: other_example_for_tests.cpp.s
@@ -333,8 +333,8 @@ other_example_for_tests.s: other_example_for_tests.cpp.s
 
 # target to generate assembly for a file
 other_example_for_tests.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/other_example_for_tests.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/other_example_for_tests.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/other_example_for_tests.cpp.s
 .PHONY : other_example_for_tests.cpp.s
 
 # Help Target
@@ -349,8 +349,8 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... All_tests"
 	@echo "... ft_webserver"
-	@echo "... ft_webserverTest"
 	@echo "... gmock"
 	@echo "... gmock_main"
 	@echo "... gtest"

@@ -72,8 +72,8 @@ CMAKE_BINARY_DIR = /Users/egums/ft_webserv/cmake-build-debug
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/ft_webserverTest.dir/all
 all: CMakeFiles/ft_webserver.dir/all
+all: CMakeFiles/All_tests.dir/all
 all: googletest/all
 
 .PHONY : all
@@ -84,8 +84,8 @@ preinstall: googletest/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/ft_webserverTest.dir/clean
 clean: CMakeFiles/ft_webserver.dir/clean
+clean: CMakeFiles/All_tests.dir/clean
 clean: googletest/clean
 
 .PHONY : clean
@@ -151,36 +151,6 @@ googletest/googletest/clean: googletest/googletest/CMakeFiles/gtest.dir/clean
 .PHONY : googletest/googletest/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/ft_webserverTest.dir
-
-# All Build rule for target.
-CMakeFiles/ft_webserverTest.dir/all: googletest/googlemock/CMakeFiles/gmock.dir/all
-CMakeFiles/ft_webserverTest.dir/all: googletest/googlemock/CMakeFiles/gmock_main.dir/all
-CMakeFiles/ft_webserverTest.dir/all: googletest/googletest/CMakeFiles/gtest_main.dir/all
-CMakeFiles/ft_webserverTest.dir/all: googletest/googletest/CMakeFiles/gtest.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles --progress-num=4,5,6 "Built target ft_webserverTest"
-.PHONY : CMakeFiles/ft_webserverTest.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/ft_webserverTest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/egums/ft_webserv/cmake-build-debug/CMakeFiles 11
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/ft_webserverTest.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/egums/ft_webserv/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/ft_webserverTest.dir/rule
-
-# Convenience name for target.
-ft_webserverTest: CMakeFiles/ft_webserverTest.dir/rule
-
-.PHONY : ft_webserverTest
-
-# clean rule for target.
-CMakeFiles/ft_webserverTest.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/clean
-.PHONY : CMakeFiles/ft_webserverTest.dir/clean
-
-#=============================================================================
 # Target rules for target CMakeFiles/ft_webserver.dir
 
 # All Build rule for target.
@@ -188,7 +158,7 @@ CMakeFiles/ft_webserver.dir/all: googletest/googletest/CMakeFiles/gtest_main.dir
 CMakeFiles/ft_webserver.dir/all: googletest/googletest/CMakeFiles/gtest.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target ft_webserver"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles --progress-num=4,5,6 "Built target ft_webserver"
 .PHONY : CMakeFiles/ft_webserver.dir/all
 
 # Build rule for subdir invocation for target.
@@ -207,6 +177,36 @@ ft_webserver: CMakeFiles/ft_webserver.dir/rule
 CMakeFiles/ft_webserver.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/clean
 .PHONY : CMakeFiles/ft_webserver.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/All_tests.dir
+
+# All Build rule for target.
+CMakeFiles/All_tests.dir/all: googletest/googlemock/CMakeFiles/gmock.dir/all
+CMakeFiles/All_tests.dir/all: googletest/googlemock/CMakeFiles/gmock_main.dir/all
+CMakeFiles/All_tests.dir/all: googletest/googletest/CMakeFiles/gtest_main.dir/all
+CMakeFiles/All_tests.dir/all: googletest/googletest/CMakeFiles/gtest.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target All_tests"
+.PHONY : CMakeFiles/All_tests.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/All_tests.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/egums/ft_webserv/cmake-build-debug/CMakeFiles 11
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/All_tests.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/egums/ft_webserv/cmake-build-debug/CMakeFiles 0
+.PHONY : CMakeFiles/All_tests.dir/rule
+
+# Convenience name for target.
+All_tests: CMakeFiles/All_tests.dir/rule
+
+.PHONY : All_tests
+
+# clean rule for target.
+CMakeFiles/All_tests.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/All_tests.dir/build.make CMakeFiles/All_tests.dir/clean
+.PHONY : CMakeFiles/All_tests.dir/clean
 
 #=============================================================================
 # Target rules for target googletest/googlemock/CMakeFiles/gmock.dir
