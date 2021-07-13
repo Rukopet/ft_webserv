@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Commits with tests
+cmake-build-debug
+cmake-build-debug-coverage
