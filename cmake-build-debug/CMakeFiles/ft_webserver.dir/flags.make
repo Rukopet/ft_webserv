@@ -4,7 +4,7 @@
 # compile CXX with /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /Users/egums/ft_webserv/googletest/googletest/include -isystem /Users/egums/ft_webserv/googletest/googletest
+CXX_INCLUDES = -I/Users/egums/ft_webserv/googletest/googlemock/include -isystem /Users/egums/ft_webserv/googletest/googletest/include -isystem /Users/egums/ft_webserv/googletest/googletest
 
 CXX_FLAGS = -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.14 -std=gnu++11
 

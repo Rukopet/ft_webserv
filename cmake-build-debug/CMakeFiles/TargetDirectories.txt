@@ -1,10 +1,11 @@
 /Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/install/local.dir
-/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/install/strip.dir
-/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/ft_webserver.dir
-/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/install.dir
 /Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/list_install_components.dir
+/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/ft_webserverTest.dir
 /Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/rebuild_cache.dir
 /Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/install/strip.dir
+/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/install.dir
+/Users/egums/ft_webserv/cmake-build-debug/CMakeFiles/ft_webserver.dir
 /Users/egums/ft_webserv/cmake-build-debug/googletest/CMakeFiles/install/local.dir
 /Users/egums/ft_webserv/cmake-build-debug/googletest/CMakeFiles/install/strip.dir
 /Users/egums/ft_webserv/cmake-build-debug/googletest/CMakeFiles/install.dir

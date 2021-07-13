@@ -87,30 +87,6 @@ install/local/fast: preinstall/fast
 	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip/fast
-
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -P cmake_install.cmake
-.PHONY : install
-
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -P cmake_install.cmake
-.PHONY : install/fast
-
 # Special rule for the target list_install_components
 list_install_components:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
@@ -143,6 +119,30 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
 # The main all target
 all: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/egums/ft_webserv/cmake-build-debug/CMakeFiles /Users/egums/ft_webserv/cmake-build-debug//CMakeFiles/progress.marks
@@ -174,6 +174,19 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+#=============================================================================
+# Target rules for targets named ft_webserverTest
+
+# Build rule for target.
+ft_webserverTest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ft_webserverTest
+.PHONY : ft_webserverTest
+
+# fast build rule for target.
+ft_webserverTest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/build
+.PHONY : ft_webserverTest/fast
 
 #=============================================================================
 # Target rules for targets named ft_webserver
@@ -240,6 +253,33 @@ gtest/fast:
 	$(MAKE) $(MAKESILENT) -f googletest/googletest/CMakeFiles/gtest.dir/build.make googletest/googletest/CMakeFiles/gtest.dir/build
 .PHONY : gtest/fast
 
+UnitTests/Example_test.o: UnitTests/Example_test.cpp.o
+
+.PHONY : UnitTests/Example_test.o
+
+# target to build an object file
+UnitTests/Example_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/UnitTests/Example_test.cpp.o
+.PHONY : UnitTests/Example_test.cpp.o
+
+UnitTests/Example_test.i: UnitTests/Example_test.cpp.i
+
+.PHONY : UnitTests/Example_test.i
+
+# target to preprocess a source file
+UnitTests/Example_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/UnitTests/Example_test.cpp.i
+.PHONY : UnitTests/Example_test.cpp.i
+
+UnitTests/Example_test.s: UnitTests/Example_test.cpp.s
+
+.PHONY : UnitTests/Example_test.s
+
+# target to generate assembly for a file
+UnitTests/Example_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/UnitTests/Example_test.cpp.s
+.PHONY : UnitTests/Example_test.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -267,6 +307,36 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+other_example_for_tests.o: other_example_for_tests.cpp.o
+
+.PHONY : other_example_for_tests.o
+
+# target to build an object file
+other_example_for_tests.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/other_example_for_tests.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/other_example_for_tests.cpp.o
+.PHONY : other_example_for_tests.cpp.o
+
+other_example_for_tests.i: other_example_for_tests.cpp.i
+
+.PHONY : other_example_for_tests.i
+
+# target to preprocess a source file
+other_example_for_tests.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/other_example_for_tests.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/other_example_for_tests.cpp.i
+.PHONY : other_example_for_tests.cpp.i
+
+other_example_for_tests.s: other_example_for_tests.cpp.s
+
+.PHONY : other_example_for_tests.s
+
+# target to generate assembly for a file
+other_example_for_tests.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserverTest.dir/build.make CMakeFiles/ft_webserverTest.dir/other_example_for_tests.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ft_webserver.dir/build.make CMakeFiles/ft_webserver.dir/other_example_for_tests.cpp.s
+.PHONY : other_example_for_tests.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -280,13 +350,20 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... ft_webserver"
+	@echo "... ft_webserverTest"
 	@echo "... gmock"
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... UnitTests/Example_test.o"
+	@echo "... UnitTests/Example_test.i"
+	@echo "... UnitTests/Example_test.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... other_example_for_tests.o"
+	@echo "... other_example_for_tests.i"
+	@echo "... other_example_for_tests.s"
 .PHONY : help
 
 

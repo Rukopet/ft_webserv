@@ -23,5 +23,5 @@ CMakeFiles/ft_webserver.dir/asd.cpp.o: ../googletest/googletest/include/gtest/in
 CMakeFiles/ft_webserver.dir/asd.cpp.o: ../googletest/googletest/include/gtest/internal/gtest-type-util.h
 CMakeFiles/ft_webserver.dir/asd.cpp.o: ../asd.cpp
 
-CMakeFiles/ft_webserver.dir/main.cpp.o: ../main.cpp
+CMakeFiles/ft_webserver.dir/other.cpp.o: ../other.cpp
 

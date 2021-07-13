@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ft_webserver.dir/main.cpp.o"
+  "CMakeFiles/ft_webserver.dir/other_example_for_tests.cpp.o"
   "ft_webserver"
   "ft_webserver.pdb"
 )

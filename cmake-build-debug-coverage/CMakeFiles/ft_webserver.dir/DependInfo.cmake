@@ -5,11 +5,13 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/egums/ft_webserv/main.cpp" "/Users/egums/ft_webserv/cmake-build-debug-coverage/CMakeFiles/ft_webserver.dir/main.cpp.o"
+  "/Users/egums/ft_webserv/other_example_for_tests.cpp" "/Users/egums/ft_webserv/cmake-build-debug-coverage/CMakeFiles/ft_webserver.dir/other_example_for_tests.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "../googletest/googlemock/include"
   "../googletest/googletest/include"
   "../googletest/googletest"
   )

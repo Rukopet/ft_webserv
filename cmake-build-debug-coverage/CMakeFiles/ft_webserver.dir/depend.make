@@ -3,3 +3,5 @@
 
 CMakeFiles/ft_webserver.dir/main.cpp.o: ../main.cpp
 
+CMakeFiles/ft_webserver.dir/other.cpp.o: ../other.cpp
+
