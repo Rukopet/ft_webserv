@@ -9,6 +9,7 @@ add_executable(ft_webserver main.cpp other_example_for_tests.cpp)
 # this executable for google tests dont need adding main to this. Also u can RUN with coverage
 add_executable(All_tests UnitTests/Example_test.cpp other_example_for_tests.cpp)
 
+
 #for google tests
 add_subdirectory(googletest)
 include_directories(googletest/googletest/include)

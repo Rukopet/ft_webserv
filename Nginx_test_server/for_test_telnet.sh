@@ -6,3 +6,6 @@ echo "Host: www.example.com"
 echo 
 echo 
 sleep 2; } | telnet
+
+
+#TODO need fix for alpine linux!!!
