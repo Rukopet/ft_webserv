@@ -16,16 +16,22 @@ int Server::start() {
 	std::cout << "Bind sockets successful, server start" << std::endl;
 
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
+	//TODO need understand where need add fcntl call for nonblock fd
 	while (true) {
 		int sock_client;
 		sockaddr_in sa_client;
 		socklen_t client_len = sizeof(sa_client);
 
+		//TODO before that need epoll event check, now that only prototype
+
+		// ...epoll code here...
+
 		if (sock_client = accept(_m_socket, (sockaddr*)&sa_client, &client_len) == -1) {
 			std::cerr << "ERROR IN ACCEPT";
 			continue;
 		}
-//		std::string ip =
+		std::string ip_client = "0"; //some converts with ntohs()
+		_client_handler(sock_client, ip_client);
 	}
 	return 0;
 }
