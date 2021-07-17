@@ -30,12 +30,9 @@ int Server::start() {
 	return 0;
 }
 
-
-int Server::_client_handler() {
+int Server::_client_handler(int sock_client, std::string &ip_client) {
 	return 0;
 }
-
-
 
 //TODO need adding port for that, dont know how handle it, i think this after parsing config
 #define SOME_PORT 10000
@@ -63,4 +60,5 @@ int Server::_socket_init() {
 	}
 	return 0;
 }
+
 
