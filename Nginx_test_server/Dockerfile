@@ -5,7 +5,7 @@ COPY configs/nginx_simple.conf etc/nginx/conf.d/default.conf
 COPY for_test_telnet.sh /
 
 RUN apk update
-RUN apk add busybox-extras vim
+RUN apk add busybox-extras vim bash expect
 
 
 CMD ["nginx", "-g", "daemon off;"]
