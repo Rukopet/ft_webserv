@@ -17,8 +17,21 @@ int Server::start() {
 
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
 	while (true) {
-		return 1;
+		int sock_client;
+		sockaddr_in sa_client;
+		socklen_t client_len = sizeof(sa_client);
+
+		if (sock_client = accept(_m_socket, (sockaddr*)&sa_client, &client_len) == -1) {
+			std::cerr << "ERROR IN ACCEPT";
+			continue;
+		}
+//		std::string ip =
 	}
+	return 0;
+}
+
+
+int Server::_client_handler() {
 	return 0;
 }
 
@@ -50,3 +63,4 @@ int Server::_socket_init() {
 	}
 	return 0;
 }
+

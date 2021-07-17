@@ -4,8 +4,9 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
 
+// for sockaddr_in struct
+#include <netinet/in.h>
 
 // for errno and exceptions
 #include <cerrno>
@@ -19,6 +20,7 @@ public:
 
 private:
 	int _socket_init();
+	int _client_handler();
 
 private:
 	int _m_socket;
