@@ -7,34 +7,48 @@
 #include <string.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <set>
+#include <map>
+#include <vector>
 
+#include <iostream>
 int
 main(int argc, char **argv)
 {
-	struct	kevent event;	 /* Event we want to monitor */
+//	struct	kevent event;	 /* Event we want to monitor */
 	struct	kevent tevent;	 /* Event triggered */
-	int kq, fd, ret;
+	int kq, fd, ret, fd2;
 
-	if (argc != 2)
-		err(EXIT_FAILURE, "Usage: %s path\n", argv[0]);
 	fd = open(argv[1], O_RDONLY);
-	if (fd	== -1)
-		err(EXIT_FAILURE, "Failed to open '%s'", argv[1]);
-
+	fd2 = open(argv[2], O_RDONLY);
 	/* Create kqueue. */
 	kq = kqueue();
 	if (kq	== -1)
 		err(EXIT_FAILURE, "kqueue() failed");
 
 	/* Initialize kevent structure. */
-	EV_SET(&event,	fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE,
+	std::set<int> a;
+//	std::map<int, std::vector<int>> b;
+	std::vector<int> v1;
+//	std::cout << v1 << std::endl;
+
+//	struct	kevent *event = new struct kevent[2];
+	std::vector<struct kevent> mine;
+	struct kevent tmp;
+	mine.push_back(tmp);
+	mine.push_back(tmp);
+	mine.erase(std::find(mine.begin(), mine.end(), tmp.ident));
+
+	EV_SET(&mine[0],	fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE,
+		   0,	NULL);
+	EV_SET(&mine[1],	fd2, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE,
 		   0,	NULL);
 	/* Attach event to the	kqueue.	*/
-	ret = kevent(kq, &event, 1, NULL, 0, NULL);
+	ret = kevent(kq, mine.data(), 2, NULL, 0, NULL);
 	if (ret == -1)
 		err(EXIT_FAILURE, "kevent register");
-	if (event.flags & EV_ERROR)
-		errx(EXIT_FAILURE,	"Event error: %s", strerror(event.data));
+//	if (event->flags & EV_ERROR)
+//		errx(EXIT_FAILURE,	"Event error: %s", strerror(event[0].data));
 
 	for (;;) {
 		/*	Sleep until something happens. */
