@@ -5,6 +5,11 @@ int Server::_core_loop() {
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
 	//TODO need understand where need add fcntl call for nonblock fd
 
+	//TODO replace to class member _monitoring_events
+	struct kevent monitoring_events;
+	struct kevent triggered_events;
+
+
 	while (true) {
 		int sock_client;
 		sockaddr_in sa_client;
@@ -26,10 +31,6 @@ int Server::_core_loop() {
 int Server::start() {
 	try {
 		_socket_init();
-	}
-	catch (Server_start_exception &e) {
-		std::cerr << "IN START METHOD, IN SERVER: " << e.what() << std::endl;
-		return -1;
 	}
 	catch (std::exception &e) {
 		std::cerr << "IN START METHOD, IN SERVER: " << e.what() << std::endl;

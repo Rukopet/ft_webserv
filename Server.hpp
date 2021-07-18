@@ -4,6 +4,9 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
+// for kqueue
+#include <sys/event.h>
+
 
 // for sockaddr_in struct
 #include <netinet/in.h>
@@ -28,9 +31,11 @@ private:
 private:
 	int _m_socket;
 	std::set<int> _servers_sockets;
+	std::set<int> _connections_sockets;
+	struct kevent _monitoring_events;
 };
 
-
+//TODO need fix some features
 struct Server_start_exception : public std::exception {
 	char *error;
 	bool flag_for_errno;
