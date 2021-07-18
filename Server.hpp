@@ -11,6 +11,7 @@
 // for errno and exceptions
 #include <cerrno>
 
+#include <set>
 
 #define MAX_CLIENTS 1000
 
@@ -21,9 +22,12 @@ public:
 private:
 	int _socket_init();
 	int _client_handler(int sock_client, std::string &ip_client);
+	int _core_loop();
+	int _accept_connection();
 
 private:
 	int _m_socket;
+	std::set<int> _servers_sockets;
 };
 
 

@@ -1,5 +1,28 @@
 #include "Server.hpp"
 
+int Server::_core_loop() {
+
+	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
+	//TODO need understand where need add fcntl call for nonblock fd
+
+	while (true) {
+		int sock_client;
+		sockaddr_in sa_client;
+		socklen_t client_len = sizeof(sa_client);
+
+		//TODO before that need epoll event check, now that only prototype (
+
+		// ...epoll code here...
+
+		if (sock_client = accept(_m_socket, (sockaddr*)&sa_client, &client_len) == -1) {
+			std::cerr << "ERROR IN ACCEPT";
+			continue;
+		}
+		std::string ip_client = "0"; //some converts with ntohs()
+		_client_handler(sock_client, ip_client);
+	}
+}
+
 int Server::start() {
 	try {
 		_socket_init();
@@ -15,24 +38,10 @@ int Server::start() {
 
 	std::cout << "Bind sockets successful, server start" << std::endl;
 
-	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
-	//TODO need understand where need add fcntl call for nonblock fd
-	while (true) {
-		int sock_client;
-		sockaddr_in sa_client;
-		socklen_t client_len = sizeof(sa_client);
+	//TODO this crutch need removed
+	_servers_sockets.insert(_m_socket);
+	_core_loop();
 
-		//TODO before that need epoll event check, now that only prototype
-
-		// ...epoll code here...
-
-		if (sock_client = accept(_m_socket, (sockaddr*)&sa_client, &client_len) == -1) {
-			std::cerr << "ERROR IN ACCEPT";
-			continue;
-		}
-		std::string ip_client = "0"; //some converts with ntohs()
-		_client_handler(sock_client, ip_client);
-	}
 	return 0;
 }
 
@@ -68,3 +77,4 @@ int Server::_socket_init() {
 }
 
 
+// inet_adr examples: https://coderoad.ru/5328070/%D0%9A%D0%B0%D0%BA-%D0%BF%D1%80%D0%B5%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D1%8C-%D1%81%D1%82%D1%80%D0%BE%D0%BA%D1%83-%D0%B2-%D0%B0%D0%B4%D1%80%D0%B5%D1%81-IP-%D0%B8-%D0%BD%D0%B0%D0%BE%D0%B1%D0%BE%D1%80%D0%BE%D1%82
