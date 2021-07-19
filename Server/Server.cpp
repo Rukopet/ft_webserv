@@ -5,6 +5,9 @@ int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent *> &main
 		struct kevent *tmp = new struct kevent;
 		main_sockets.insert(tmp);
 		monitor_events.insert(monitor_events.begin(), tmp);
+		//TODO replace this block to the sock init
+		if (fcntl(*it, F_SETFL, O_NONBLOCK) == -1)
+			return -1;
 		// non checked flags on events
 		EV_SET(monitor_events[0], *it, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
 	}
@@ -16,13 +19,10 @@ int Server::_core_loop() {
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
 	//TODO need understand where need add fcntl call for nonblock fd
 
-	//TODO replace to class member _monitoring_events
-	struct kevent monitoring_events;
-	struct kevent triggered_events;
-
 	std::set<struct kevent *> main_sockets;
 	std::vector<struct kevent *> monitor_events;
-	_queue_init_set_and_vectors_for_core(main_sockets, monitor_events);
+	if (_queue_init_set_and_vectors_for_core(main_sockets, monitor_events) == -1)
+		throw Server_start_exception(true);
 
 
 	while (true) {
@@ -46,18 +46,15 @@ int Server::_core_loop() {
 int Server::start() {
 	try {
 		_socket_init();
+		//TODO this crutch need removed
+		std::cout << "Bind sockets successful, server start" << std::endl;
+		_servers_sockets.push_back(_m_socket);
+		_core_loop();
 	}
 	catch (std::exception &e) {
 		std::cerr << "IN START METHOD, IN SERVER: " << e.what() << std::endl;
 		return -1;
 	}
-
-	std::cout << "Bind sockets successful, server start" << std::endl;
-
-	//TODO this crutch need removed
-	_servers_sockets.push_back(_m_socket);
-	_core_loop();
-
 	return 0;
 }
 

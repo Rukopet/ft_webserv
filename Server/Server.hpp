@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 // for kqueue
 #include <sys/event.h>
+#include <sys/fcntl.h>
 
 
 // for sockaddr_in struct
