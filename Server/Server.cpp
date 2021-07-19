@@ -31,9 +31,8 @@ int Server::_accept_connection(const struct kevent &incoming_connection,
 	socklen_t client_len = sizeof(sa_client);
 	int client_socket = accept(incoming_connection.data, (sockaddr *) &sa_client,
 							   &client_len);
-
 	if (client_socket == -1) {
-		throw Server_start_exception("Error in _accept_connection: ");
+		throw Server_start_exception();
 	}
 	return 0;
 }
@@ -46,7 +45,7 @@ int Server::_core_loop() {
 	std::set<struct kevent *> main_sockets;
 	std::vector<struct kevent *> monitor_events;
 	if (_queue_init_set_and_vectors_for_core(main_sockets, monitor_events) == -1)
-		throw Server_start_exception(true);
+		throw Server_start_exception();
 
 
 //	while (true) {
@@ -72,7 +71,7 @@ int Server::_core_loop() {
 
 		ret = kevent(kq, NULL, 0, tmp_event_list, 1, NULL);
 		if (ret == -1)
-			throw Server_start_exception(true);
+			throw Server_start_exception();
 
 		for (int i = 0; i < ret; ++i) {
 
@@ -112,7 +111,7 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 int Server::_socket_init() {
 	_m_socket = socket(PF_INET, SOCK_STREAM, 0);
 	if (_m_socket == -1) {
-		throw Server_start_exception(true);
+		throw Server_start_exception();
 	}
 
 	sockaddr_in sa_server {0};
@@ -124,11 +123,11 @@ int Server::_socket_init() {
 	// https://www.opennet.ru/docs/RUS/socket/node3.html
 	// explain how and why cast sockaddr_in to sockaddr
 	if (bind(_m_socket, (sockaddr*)&sa_server, sizeof(sa_server)) != 0) {
-		throw Server_start_exception(true);
+		throw Server_start_exception();
 	}
 
 	if (listen(_m_socket, MAX_CLIENTS) != 0) {
-		throw Server_start_exception(true);
+		throw Server_start_exception();
 	}
 	return 0;
 }

@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 98)
 add_executable(ft_webserver main.cpp other_example_for_tests.cpp Server/Server.cpp)
 
 # this executable for google tests dont need adding main to this. Also u can RUN with coverage
-add_executable(All_tests UnitTests/Example_test.cpp other_example_for_tests.cpp)
+add_executable(All_tests UnitTests/Example_test.cpp other_example_for_tests.cpp UnitTests/ExeptionTest.cpp)
 add_executable(shit main_for_check_nonblock.cpp)
 
 

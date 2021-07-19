@@ -46,22 +46,20 @@ private:
 
 //TODO need fix some features
 struct Server_start_exception : public std::exception {
-	char *error;
-	bool flag_for_errno;
-	Server_start_exception(char *err) throw() {
-		error = err;
-		flag_for_errno = false;
+
+	std::string error;
+
+	Server_start_exception(std::string err) throw() {
+		std::string errno_string = std::strerror(errno);
+		error = err + errno_string;
 	};
-	Server_start_exception(bool err) throw() {
-		flag_for_errno = true;
+	Server_start_exception() throw() {
+		error = std::strerror(errno);
 	};
 	virtual const char *what() const throw() {
-		if (flag_for_errno)
-			return std::strerror(errno);
-		std::string tmp = std::strerror(errno);
-		tmp += error;
-		return tmp.c_str();
+		return error.c_str();
 	};
+
 };
 
 #endif //PROJECT_NAME_SERVER_HPP
