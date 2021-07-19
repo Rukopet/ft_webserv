@@ -32,9 +32,9 @@ int Server::_accept_connection(const struct kevent &incoming_connection,
 	int client_socket = accept(incoming_connection.data, (sockaddr *) &sa_client,
 							   &client_len);
 
-	if (client_socket == -1)
-
-
+	if (client_socket == -1) {
+		throw Server_start_exception("Error in _accept_connection: ");
+	}
 	return 0;
 }
 

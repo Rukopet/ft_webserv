@@ -58,7 +58,9 @@ struct Server_start_exception : public std::exception {
 	virtual const char *what() const throw() {
 		if (flag_for_errno)
 			return std::strerror(errno);
-		return error;
+		std::string tmp = std::strerror(errno);
+		tmp += error;
+		return tmp.c_str();
 	};
 };
 
