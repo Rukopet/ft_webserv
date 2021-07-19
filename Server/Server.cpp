@@ -14,6 +14,22 @@ int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent *> &main
 	return 0;
 }
 
+bool Server::_queue_check_in(const struct kevent &event,
+							 std::set<struct kevent *> &checked) const {
+
+	for (std::set<struct kevent *>::const_iterator it = checked.begin(); it != checked.end(); ++it) {
+		if ((*it)->data == event.data)
+			return true;
+	}
+
+	return false;
+}
+
+int Server::_accept_connection(const struct kevent &incoming_connection,
+							   std::vector<struct kevent *> &monitor_events) {
+	return 0;
+}
+
 int Server::_core_loop() {
 
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
@@ -25,21 +41,41 @@ int Server::_core_loop() {
 		throw Server_start_exception(true);
 
 
+//	while (true) {
+//		int sock_client;
+//		sockaddr_in sa_client;
+//		socklen_t client_len = sizeof(sa_client);
+//
+//		//TODO before that need epoll event check, now that only prototype (
+//
+//		// ...epoll code here...
+//
+//		if (sock_client = accept(_m_socket, (sockaddr*)&sa_client, &client_len) == -1) {
+//			std::cerr << "ERROR IN ACCEPT";
+//			continue;
+//		}
+//		std::string ip_client = "0"; //some converts with ntohs()
+//		_client_handler(sock_client, ip_client);
+//	}
+	int ret = 0, kq = kqueue();
+	struct kevent *tmp_event_list;
+	memset(&tmp_event_list, 0, sizeof(tmp_event_list));
 	while (true) {
-		int sock_client;
-		sockaddr_in sa_client;
-		socklen_t client_len = sizeof(sa_client);
 
-		//TODO before that need epoll event check, now that only prototype (
+		ret = kevent(kq, NULL, 0, tmp_event_list, 1, NULL);
+		if (ret == -1)
+			throw Server_start_exception(true);
 
-		// ...epoll code here...
+		for (int i = 0; i < ret; ++i) {
 
-		if (sock_client = accept(_m_socket, (sockaddr*)&sa_client, &client_len) == -1) {
-			std::cerr << "ERROR IN ACCEPT";
-			continue;
+			if (_queue_check_in(tmp_event_list[i], main_sockets))
+				_accept_connection(tmp_event_list[i], monitor_events);
+
+			else {
+
+			}
 		}
-		std::string ip_client = "0"; //some converts with ntohs()
-		_client_handler(sock_client, ip_client);
+
 	}
 }
 

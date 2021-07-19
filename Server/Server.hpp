@@ -28,11 +28,14 @@ private:
 	int _socket_init();
 	int _client_handler(int sock_client, std::string &ip_client);
 	int _core_loop();
-	int _accept_connection();
+	int _accept_connection(const struct kevent &incoming_connection,
+						   std::vector<struct kevent *> &monitor_events);
 
 	int	_queue_fd_add();
 	int	_queue_fd_remove();
 	int _queue_init_set_and_vectors_for_core(std::set<struct kevent *> &, std::vector<struct kevent *> &);
+	bool _queue_check_in(const struct kevent &event,
+						 std::set<struct kevent *> &checked) const;
 
 private:
 	int _m_socket;
