@@ -46,7 +46,6 @@ private:
 
 //TODO need fix some features
 struct Server_start_exception : public std::exception {
-
 	std::string error;
 
 	Server_start_exception(std::string err) throw() {
