@@ -4,12 +4,12 @@ int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent *> &main
 	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
 		struct kevent *tmp = new struct kevent;
 		main_sockets.insert(tmp);
-		monitor_events.insert(monitor_events.begin(), tmp);
+		monitor_events.push_back(tmp);
 		//TODO replace this block to the sock init
 		if (fcntl(*it, F_SETFL, O_NONBLOCK) == -1)
 			return -1;
 		// non checked flags on events
-		EV_SET(monitor_events[0], *it, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
+		EV_SET(monitor_events.back(), *it, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
 	}
 	return 0;
 }
