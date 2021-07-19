@@ -27,6 +27,14 @@ bool Server::_queue_check_in(const struct kevent &event,
 
 int Server::_accept_connection(const struct kevent &incoming_connection,
 							   std::vector<struct kevent *> &monitor_events) {
+	sockaddr_in sa_client;
+	socklen_t client_len = sizeof(sa_client);
+	int client_socket = accept(incoming_connection.data, (sockaddr *) &sa_client,
+							   &client_len);
+
+	if (client_socket == -1)
+
+
 	return 0;
 }
 
