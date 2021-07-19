@@ -1,5 +1,16 @@
 #include "Server.hpp"
 
+int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent *> &main_sockets, std::vector<struct kevent *> &monitor_events) {
+	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
+		struct kevent *tmp = new struct kevent;
+		main_sockets.insert(tmp);
+		monitor_events.insert(monitor_events.begin(), tmp);
+		// non checked flags on events
+		EV_SET(monitor_events[0], *it, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
+	}
+	return 0;
+}
+
 int Server::_core_loop() {
 
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
@@ -8,6 +19,10 @@ int Server::_core_loop() {
 	//TODO replace to class member _monitoring_events
 	struct kevent monitoring_events;
 	struct kevent triggered_events;
+
+	std::set<struct kevent *> main_sockets;
+	std::vector<struct kevent *> monitor_events;
+	_queue_init_set_and_vectors_for_core(main_sockets, monitor_events);
 
 
 	while (true) {
@@ -40,7 +55,7 @@ int Server::start() {
 	std::cout << "Bind sockets successful, server start" << std::endl;
 
 	//TODO this crutch need removed
-	_servers_sockets.insert(_m_socket);
+	_servers_sockets.push_back(_m_socket);
 	_core_loop();
 
 	return 0;

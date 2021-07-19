@@ -15,7 +15,6 @@
 int
 main(int argc, char **argv)
 {
-//	struct	kevent event;	 /* Event we want to monitor */
 	struct	kevent tevent;	 /* Event triggered */
 	int kq, fd, ret, fd2;
 

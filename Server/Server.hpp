@@ -15,6 +15,7 @@
 #include <cerrno>
 
 #include <set>
+#include <vector>
 
 #define MAX_CLIENTS 1000
 
@@ -28,12 +29,13 @@ private:
 	int _core_loop();
 	int _accept_connection();
 
+	int	_queue_fd_add();
+	int	_queue_fd_remove();
+	int _queue_init_set_and_vectors_for_core(std::set<struct kevent *> &, std::vector<struct kevent *> &);
+
 private:
 	int _m_socket;
-	std::set<int> _servers_sockets;
-	std::set<int> _connections_sockets;
-
-	struct kevent _monitoring_events;
+	std::vector<int> _servers_sockets;
 };
 
 
