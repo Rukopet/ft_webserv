@@ -28,14 +28,17 @@ private:
 	int _socket_init();
 	int _client_handler(int sock_client, std::string &ip_client);
 	int _core_loop();
-	int _accept_connection(const struct kevent &incoming_connection,
-						   std::vector<struct kevent *> &monitor_events);
+	static int _accept_connection(const struct kevent &incoming_connection,
+								  std::vector<struct kevent *> &monitor_events,
+								  int kq_fd);
 
-	int	_queue_fd_add();
+	static int
+	_queue_fd_add(int new_fd, std::vector<struct kevent *> &monitor_events,
+				  int kq_fd);
 	int	_queue_fd_remove();
 	int _queue_init_set_and_vectors_for_core(std::set<struct kevent *> &, std::vector<struct kevent *> &);
-	bool _queue_check_in(const struct kevent &event,
-						 std::set<struct kevent *> &checked) const;
+	static bool _queue_check_in(const struct kevent &event,
+						 std::set<struct kevent *> &checked);
 
 private:
 	int _m_socket;
@@ -50,7 +53,7 @@ struct Server_start_exception : public std::exception {
 
 	Server_start_exception(std::string err) throw() {
 		std::string errno_string = std::strerror(errno);
-		error = err + errno_string;
+		error = err + "\t" + errno_string;
 	};
 	Server_start_exception() throw() {
 		error = std::strerror(errno);
