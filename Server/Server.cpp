@@ -17,6 +17,9 @@ std::string Server::_get_ip_address(const sockaddr_in &clientData) {
 }
 //----------------------------------------------------------------------------//
 
+Server::Server(Config *conf) : _conf(conf) {}
+Server::Server() {}
+
 int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent *> &main_sockets, std::vector<struct kevent *> &monitor_events) {
 	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
 		struct kevent *tmp = new struct kevent;
@@ -166,8 +169,20 @@ int Server::start() {
 	return 0;
 }
 
+
+//TODO need replace that crutch for normal config value
+#define MAX_BODY_SIZE 1
 int Server::_client_handler(int sock_client, std::string &ip_client) {
-	return 1;
+	int len_buffer = 1048576 * MAX_BODY_SIZE;
+	char buffer[len_buffer];
+	memset(&buffer, 0, len_buffer);
+
+	int ret = read(sock_client, buffer, len_buffer);
+	if (ret == -1) {
+		throw Server_start_exception("IN CLIENT HANDLER: while read:");
+	}
+	buffer[ret] = '\0';
+
 }
 
 //TODO need adding port for that, dont know how handle it, i think this after parsing config

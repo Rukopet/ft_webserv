@@ -4,7 +4,7 @@
 
 int main() {
 	IParser &ok = Parser::getInstance();
-	ok.parseConfig();
+	Server b(ok.parseConfig("123"));
 	Server s;
 	s.start();
 }

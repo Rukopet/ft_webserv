@@ -8,6 +8,7 @@
 #include <sys/event.h>
 #include <sys/fcntl.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 
 // for sockaddr_in struct
@@ -19,11 +20,14 @@
 #include <set>
 #include <vector>
 #include <map>
+#include "../parser/Config.hpp"
 
 #define MAX_CLIENTS 1000
 
 class Server {
 public:
+	Server(Config *conf);
+	Server();
 	int start();
 
 private:
@@ -44,7 +48,6 @@ private:
 	static bool _queue_check_in(	const struct kevent &event,
 						 			std::set<struct kevent *> &checked);
 
-
 //----------------------------------------------------------------------------//
 	static std::string	_get_ip_address(const sockaddr_in &clientData);
 	static void* 		_get_address(sockaddr *sa);
@@ -54,6 +57,7 @@ private:
 private:
 	int _m_socket;
 	std::vector<int> _servers_sockets;
+	Config *_conf;
 };
 
 
@@ -61,8 +65,7 @@ private:
 //TODO need fix some features
 struct Server_start_exception : public std::exception {
 	std::string error;
-
-	Server_start_exception(std::string err) throw() {
+	Server_start_exception(const std::string& err) throw() {
 		std::string errno_string = std::strerror(errno);
 		error = err + "\t" + errno_string;
 	};
