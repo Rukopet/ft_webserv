@@ -39,3 +39,7 @@ cmake-build-debug-coverage
 # Idea
 .idea
 CMakeLists.txt
+
+# Files for test behavior
+test_behavior.cpp
+test
