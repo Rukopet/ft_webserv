@@ -24,7 +24,8 @@ int Server::_queue_init_set_and_vectors_for_core(
 		std::set<struct kevent *, SetCompare> &main_sockets,
 		std::vector<struct kevent> &monitor_events) {
 
-	_servers_sockets.push_back(open("123", O_RDONLY));
+//	_servers_sockets.push_back(open("123", O_RDONLY));
+	_servers_sockets.push_back(_m_socket);
 	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
 		monitor_events.resize(monitor_events.size() + 1);
 
@@ -32,7 +33,6 @@ int Server::_queue_init_set_and_vectors_for_core(
 		// non checked flags on events
 		if (fcntl(*it, F_SETFL, O_NONBLOCK) == -1)
 			return -1;
-//		main_sockets.insert(tmp);
 		struct kevent *tmp = &monitor_events.back();
 		EV_SET(tmp, *it, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
 		main_sockets.insert(tmp);
@@ -105,7 +105,8 @@ int Server::_core_loop() {
 //	}
 
 	int ret = 0;
-	struct kevent *tmp_event_list;
+	struct kevent *tmp_event_list = &monitor_events[0];
+
 	while (true) {
 		ret = kevent(kq, monitor_events.data(), static_cast<int>(monitor_events.size()), NULL, 0, NULL);
 		if (ret == -1) {
@@ -118,8 +119,8 @@ int Server::_core_loop() {
 		}
 
 		for (int i = 0; i < ret; ++i) {
-
-			if (main_sockets.count(&tmp_event_list[i]) != 0) {
+			struct kevent *current_connection = &tmp_event_list[i];
+			if (main_sockets.count(current_connection) != 0) {
 				try {
 					int client_socket = _accept_connection(tmp_event_list[i], monitor_events, kq,
 									   client_address_for_sock);

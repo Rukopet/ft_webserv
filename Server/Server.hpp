@@ -90,8 +90,8 @@ struct Server_start_exception : public std::exception {
 // Comparator for Set
 //----------------------------------------------------------------------------//
 struct SetCompare {
-	bool operator()(struct kevent *a, struct kevent *b) const {
-		return a->ident != b->ident;
+	bool operator()(const struct kevent *a, const struct kevent *b) const {
+		return a->ident < b->ident;
 	}
 //----------------------------------------------------------------------------//
 
