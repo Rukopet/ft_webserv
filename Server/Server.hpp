@@ -7,6 +7,7 @@
 // for kqueue
 #include <sys/event.h>
 #include <sys/fcntl.h>
+#include <arpa/inet.h>
 
 
 // for sockaddr_in struct
@@ -17,6 +18,7 @@
 
 #include <set>
 #include <vector>
+#include <map>
 
 #define MAX_CLIENTS 1000
 
@@ -30,15 +32,24 @@ private:
 	int _core_loop();
 	static int _accept_connection(const struct kevent &incoming_connection,
 								  std::vector<struct kevent *> &monitor_events,
-								  int kq_fd);
+								  int kq_fd,
+								  std::map<int, sockaddr_in> &clients);
 
-	static int
-	_queue_fd_add(int new_fd, std::vector<struct kevent *> &monitor_events,
-				  int kq_fd);
+	static int _queue_fd_add(		int new_fd,
+							 		std::vector<struct kevent *> &monitor_events,
+							 		int kq_fd);
+
 	int	_queue_fd_remove();
 	int _queue_init_set_and_vectors_for_core(std::set<struct kevent *> &, std::vector<struct kevent *> &);
-	static bool _queue_check_in(const struct kevent &event,
-						 std::set<struct kevent *> &checked);
+	static bool _queue_check_in(	const struct kevent &event,
+						 			std::set<struct kevent *> &checked);
+
+
+//----------------------------------------------------------------------------//
+	static std::string	_get_ip_address(const sockaddr_in &clientData);
+	static void* 		_get_address(sockaddr *sa);
+//----------------------------------------------------------------------------//
+
 
 private:
 	int _m_socket;

@@ -35,5 +35,7 @@
 cmake-build-debug
 cmake-build-debug/*
 cmake-build-debug-coverage
+
+# Idea
 .idea
-.idea/*
+CMakeLists.txt

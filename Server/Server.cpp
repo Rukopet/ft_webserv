@@ -1,15 +1,32 @@
 #include "Server.hpp"
 
+//----------------------------------------------------------------------------//
+			//for get clients ip addresses
+void *Server::_get_address(sockaddr *sa) {
+	if (sa->sa_family == AF_INET)
+		return &(((sockaddr_in*)sa)->sin_addr);
+	return &(((sockaddr_in6*)sa)->sin6_addr);
+}
+
+std::string Server::_get_ip_address(const sockaddr_in &clientData) {
+	char ip[INET6_ADDRSTRLEN];
+	memset(&ip, 0, INET6_ADDRSTRLEN);
+	inet_ntop(clientData.sin_family, _get_address((sockaddr*)&clientData), ip,
+			  sizeof(ip));
+	return std::string(ip);
+}
+//----------------------------------------------------------------------------//
+
 int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent *> &main_sockets, std::vector<struct kevent *> &monitor_events) {
 	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
 		struct kevent *tmp = new struct kevent;
 		main_sockets.insert(tmp);
 		monitor_events.push_back(tmp);
 		//TODO replace this block to the sock init
+		// non checked flags on events
 		if (fcntl(*it, F_SETFL, O_NONBLOCK) == -1)
 			return -1;
-		// non checked flags on events
-		EV_SET(monitor_events.back(), *it, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
+		EV_SET(monitor_events.back(), *it, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
 	}
 	return 0;
 }
@@ -24,10 +41,13 @@ bool Server::_queue_check_in(const struct kevent &event,
 	return false;
 }
 
+
 int Server::_queue_fd_add(int new_fd, std::vector<struct kevent *> &monitor_events,
 					  int kq_fd) {
+	EV_SET(monitor_events.back(), new_fd, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
 
-	EV_SET(monitor_events.back(), new_fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
+//	EV_SET(monitor_events.back(), new_fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
+
 	int ret = 0;
 	ret = kevent(kq_fd, *(monitor_events.data()), static_cast<int>(monitor_events.size()), NULL, 0, NULL);
 	if (ret == -1)
@@ -37,7 +57,7 @@ int Server::_queue_fd_add(int new_fd, std::vector<struct kevent *> &monitor_even
 
 int Server::_accept_connection(const struct kevent &incoming_connection,
 							   std::vector<struct kevent *> &monitor_events,
-							   int kq_fd) {
+							   int kq_fd, std::map<int, sockaddr_in> &clients) {
 	sockaddr_in sa_client;
 	socklen_t client_len = sizeof(sa_client);
 	int client_socket = accept(static_cast<int>(incoming_connection.data), (sockaddr *) &sa_client,
@@ -55,6 +75,7 @@ int Server::_accept_connection(const struct kevent &incoming_connection,
 	catch (std::exception &e) {
 		throw e;
 	}
+	clients[client_socket] = sa_client;
 	return 0;
 }
 
@@ -65,6 +86,10 @@ int Server::_core_loop() {
 
 	std::set<struct kevent *> main_sockets;
 	std::vector<struct kevent *> monitor_events;
+	std::map<int, sockaddr_in> client_address_for_sock;
+
+	int kq = kqueue();
+
 	if (_queue_init_set_and_vectors_for_core(main_sockets, monitor_events) == -1)
 		throw Server_start_exception("In _core_loop, when events being initializing:");
 
@@ -86,7 +111,6 @@ int Server::_core_loop() {
 //		_client_handler(sock_client, ip_client);
 //	}
 	int ret = 0;
-	int kq = kqueue();
 	struct kevent *tmp_event_list;
 	memset(&tmp_event_list, 0, sizeof(tmp_event_list));
 
@@ -98,14 +122,16 @@ int Server::_core_loop() {
 	while (true) {
 
 		ret = kevent(kq, NULL, 0, tmp_event_list, 1, NULL);
-		if (ret == -1)
+		if (ret == -1) {
 			throw Server_start_exception();
+		}
 
 		for (int i = 0; i < ret; ++i) {
 
 			if (_queue_check_in(tmp_event_list[i], main_sockets)) {
 				try {
-					_accept_connection(tmp_event_list[i], monitor_events, kq);
+					_accept_connection(tmp_event_list[i], monitor_events, kq,
+									   client_address_for_sock);
 				}
 				catch (std::exception &e) {
 					std::cerr << e.what() << std::endl;
@@ -114,8 +140,10 @@ int Server::_core_loop() {
 			}
 
 			else {
-				//TODO MNONONo
-				_client_handler(0, (std::string &) "asd");
+				int client_socket_fd = static_cast<int>(tmp_event_list[i].ident);
+				sockaddr_in sa_client = client_address_for_sock[client_socket_fd];
+				std::string client_ip = Server::_get_ip_address(sa_client);
+				_client_handler(client_socket_fd, client_ip);
 			}
 
 		}
@@ -139,7 +167,7 @@ int Server::start() {
 }
 
 int Server::_client_handler(int sock_client, std::string &ip_client) {
-	return 0;
+	return 1;
 }
 
 //TODO need adding port for that, dont know how handle it, i think this after parsing config
@@ -148,7 +176,7 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 int Server::_socket_init() {
 	_m_socket = socket(PF_INET, SOCK_STREAM, 0);
 	if (_m_socket == -1) {
-		throw Server_start_exception();
+		throw Server_start_exception("IN SOCKET INIT: in socket:");
 	}
 
 	sockaddr_in sa_server {0};
@@ -160,11 +188,11 @@ int Server::_socket_init() {
 	// https://www.opennet.ru/docs/RUS/socket/node3.html
 	// explain how and why cast sockaddr_in to sockaddr
 	if (bind(_m_socket, (sockaddr*)&sa_server, sizeof(sa_server)) != 0) {
-		throw Server_start_exception();
+		throw Server_start_exception("IN SOCKET INIT: in bind func:");
 	}
 
 	if (listen(_m_socket, MAX_CLIENTS) != 0) {
-		throw Server_start_exception();
+		throw Server_start_exception("IN SOCKET INIT: in listen func:");
 	}
 	return 0;
 }

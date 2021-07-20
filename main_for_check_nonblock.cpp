@@ -36,7 +36,7 @@ main(int argc, char **argv)
 	struct kevent tmp;
 	mine.push_back(tmp);
 	mine.push_back(tmp);
-	mine.erase(std::find(mine.begin(), mine.end(), tmp.ident));
+//	mine.erase(std::find(mine.begin(), mine.end(), tmp.ident));
 
 	EV_SET(&mine[0],	fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE,
 		   0,	NULL);
