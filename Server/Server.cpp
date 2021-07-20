@@ -103,6 +103,7 @@ int Server::_core_loop() {
 //		std::string ip_client = "0"; //some converts with ntohs()
 //		_client_handler(sock_client, ip_client);
 //	}
+
 	int ret = 0;
 	struct kevent *tmp_event_list;
 	while (true) {
@@ -118,7 +119,7 @@ int Server::_core_loop() {
 
 		for (int i = 0; i < ret; ++i) {
 
-			if (_queue_check_in(tmp_event_list[i], main_sockets)) {
+			if (main_sockets.count(&tmp_event_list[i]) != 0) {
 				try {
 					int client_socket = _accept_connection(tmp_event_list[i], monitor_events, kq,
 									   client_address_for_sock);
