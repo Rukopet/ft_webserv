@@ -20,35 +20,38 @@ std::string Server::_get_ip_address(const sockaddr_in &clientData) {
 Server::Server(Config *conf) : _conf(conf) {}
 Server::Server() {}
 
-int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent *> &main_sockets, std::vector<struct kevent *> &monitor_events) {
+int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent, SetCompare> &main_sockets,
+												std::vector<struct kevent> &monitor_events) {
 	_servers_sockets.push_back(open("123", O_RDONLY));
 	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
-		struct kevent *tmp = new struct kevent;
-		main_sockets.insert(tmp);
-		monitor_events.push_back(tmp);
+		monitor_events.resize(monitor_events.size() + 1);
+
 		//TODO replace this block to the sock init
 		// non checked flags on events
 		if (fcntl(*it, F_SETFL, O_NONBLOCK) == -1)
 			return -1;
-		EV_SET(monitor_events.back(), *it, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
+//		main_sockets.insert(tmp);
+		struct kevent *tmp = &monitor_events.back();
+		EV_SET(tmp, *it, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
+		main_sockets.insert(*tmp);
 	}
 	return 0;
 }
 
 bool Server::_queue_check_in(const struct kevent &event,
-							 std::set<struct kevent *> &checked) {
+							 std::set<struct kevent, SetCompare> &checked) {
 
-	for (std::set<struct kevent *>::const_iterator it = checked.begin(); it != checked.end(); ++it) {
-		if ((*it)->ident == event.ident)
+	for (std::set<struct kevent>::const_iterator it = checked.begin(); it != checked.end(); ++it) {
+		if ((*it).ident == event.ident)
 			return true;
 	}
 	return false;
 }
 
 
-int Server::_queue_fd_add(int new_fd, std::vector<struct kevent *> &monitor_events,
-					  int kq_fd) {
-	EV_SET(monitor_events.back(), new_fd, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
+int Server::_queue_fd_add(int new_fd, std::vector<struct kevent> &monitor_events,
+						  int kq_fd) {
+	EV_SET(&monitor_events.back(), new_fd, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
 
 //	EV_SET(monitor_events.back(), new_fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
 
@@ -60,7 +63,7 @@ int Server::_queue_fd_add(int new_fd, std::vector<struct kevent *> &monitor_even
 }
 
 int Server::_accept_connection(const struct kevent &incoming_connection,
-							   std::vector<struct kevent *> &monitor_events,
+							   std::vector<struct kevent> &monitor_events,
 							   int kq_fd, std::map<int, sockaddr_in> &clients) {
 	sockaddr_in sa_client;
 	socklen_t client_len = sizeof(sa_client);
@@ -74,7 +77,7 @@ int Server::_accept_connection(const struct kevent &incoming_connection,
 	}
 	clients[client_socket] = sa_client;
 //	TODO need some fixes with del new or replace it on stack values
-	monitor_events.push_back(new struct kevent);
+	monitor_events.resize(monitor_events.size() + 1);
 	return client_socket;
 }
 
@@ -83,8 +86,8 @@ int Server::_core_loop() {
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
 	//TODO need understand where need add fcntl call for nonblock fd
 
-	std::set<struct kevent *> main_sockets;
-	std::vector<struct kevent *> monitor_events;
+	std::set<struct kevent, SetCompare> main_sockets;
+	std::vector<struct kevent> monitor_events;
 	std::map<int, sockaddr_in> client_address_for_sock;
 
 	int kq = kqueue();
@@ -113,7 +116,7 @@ int Server::_core_loop() {
 	struct kevent *tmp_event_list;
 	while (true) {
 		auto a = (monitor_events.data());
-//		ret = kevent(kq, a, static_cast<int>(monitor_events.size()), NULL, 0, NULL);
+		ret = kevent(kq, a, static_cast<int>(monitor_events.size()), NULL, 0, NULL);
 		if (ret == -1) {
 			throw Server_start_exception("In _core_loop, KEVENT before loop:");
 		}
@@ -177,7 +180,7 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 		throw Server_start_exception("IN CLIENT HANDLER: while read:");
 	}
 	buffer[ret] = '\0';
-
+	return 0;
 }
 
 //TODO need adding port for that, dont know how handle it, i think this after parsing config

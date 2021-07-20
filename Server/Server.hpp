@@ -22,6 +22,9 @@
 #include <map>
 #include "../parser/Config.hpp"
 
+
+struct SetCompare;
+
 #define MAX_CLIENTS 1000
 
 class Server {
@@ -35,18 +38,19 @@ private:
 	int _client_handler(int sock_client, std::string &ip_client);
 	int _core_loop();
 	static int _accept_connection(const struct kevent &incoming_connection,
-								  std::vector<struct kevent *> &monitor_events,
+								  std::vector<struct kevent> &monitor_events,
 								  int kq_fd,
 								  std::map<int, sockaddr_in> &clients);
 
-	static int _queue_fd_add(		int new_fd,
-							 		std::vector<struct kevent *> &monitor_events,
-							 		int kq_fd);
+	static int _queue_fd_add(int new_fd,
+							 std::vector<struct kevent> &monitor_events,
+							 int kq_fd);
 
 	int	_queue_fd_remove();
-	int _queue_init_set_and_vectors_for_core(std::set<struct kevent *> &, std::vector<struct kevent *> &);
-	static bool _queue_check_in(	const struct kevent &event,
-						 			std::set<struct kevent *> &checked);
+	int _queue_init_set_and_vectors_for_core(
+			std::set<struct kevent, SetCompare> &main_sockets, std::vector<struct kevent> &monitor_events);
+	static bool _queue_check_in(const struct kevent &event,
+								std::set<struct kevent, SetCompare> &checked);
 
 //----------------------------------------------------------------------------//
 	static std::string	_get_ip_address(const sockaddr_in &clientData);
@@ -62,7 +66,10 @@ private:
 
 
 
-//TODO need fix some features
+//TODO need fix some feature
+
+// Exception class
+//----------------------------------------------------------------------------//
 struct Server_start_exception : public std::exception {
 	std::string error;
 	Server_start_exception(const std::string& err) throw() {
@@ -75,6 +82,19 @@ struct Server_start_exception : public std::exception {
 	virtual const char *what() const throw() {
 		return error.c_str();
 	};
+
+};
+//----------------------------------------------------------------------------//
+
+
+
+// Comparator for Set
+//----------------------------------------------------------------------------//
+struct SetCompare {
+	bool operator()(struct kevent a, struct kevent b) const {
+		return a.ident == b.ident;
+	}
+//----------------------------------------------------------------------------//
 
 };
 
