@@ -1,0 +1,35 @@
+server {
+	listen					8005
+	host					127.0.0.1
+	server_name				default_server
+
+    location / {
+		methods					GET
+		index					index.html
+		autoindex				on
+		cgi         			.bla ./ubuntu_cgi_tester
+	}
+
+    location /put_test {
+		methods					PUT
+		index					index.html
+		autoindex				on
+		cgi         			.bla ./ubuntu_cgi_tester
+	}
+
+    location /post_body {
+		methods					POST
+		client_max_body_size	100
+		autoindex				off
+		index					test.bla
+		cgi         			.bla ./ubuntu_cgi_tester
+	}
+
+	location /directory {
+		root					./YoupiBanane
+		methods					GET POST
+		index					youpi.bad_extension
+		autoindex				off
+		cgi         			.bla ./ubuntu_cgi_tester
+    }
+}

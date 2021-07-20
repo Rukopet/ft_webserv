@@ -12,11 +12,11 @@
 
 class Config {
 private:
-	std::map<int, std::vector<ServerConfig>> servers;
-	std::vector<int> ports;
+	std::map<int, std::vector<ServerConfig> > servers;
+	std::set<int> ports;
 public:
-	Config(std::map<int, std::vector<ServerConfig>> servers, std::vector<int> ports);
-	const std::vector<int> &getPorts() const;
+	Config(const std::map<int, std::vector<ServerConfig> >& servers, const std::set<int>& ports);
+	const std::set<int> &getPorts() const;
 	const std::vector<ServerConfig> &getServers(int port) const;
 };
 
