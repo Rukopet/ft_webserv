@@ -115,8 +115,7 @@ int Server::_core_loop() {
 	int ret = 0;
 	struct kevent *tmp_event_list;
 	while (true) {
-		auto a = (monitor_events.data());
-		ret = kevent(kq, a, static_cast<int>(monitor_events.size()), NULL, 0, NULL);
+		ret = kevent(kq, monitor_events.data(), static_cast<int>(monitor_events.size()), NULL, 0, NULL);
 		if (ret == -1) {
 			throw Server_start_exception("In _core_loop, KEVENT before loop:");
 		}
@@ -155,8 +154,8 @@ int Server::_core_loop() {
 int Server::start() {
 	try {
 		_socket_init();
-		//TODO this crutch need removed
 		std::cout << "Bind sockets successful, server start" << std::endl;
+		//TODO this crutch need removed
 		_servers_sockets.push_back(_m_socket);
 		_core_loop();
 	}
