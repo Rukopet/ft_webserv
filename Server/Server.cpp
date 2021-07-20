@@ -21,6 +21,7 @@ Server::Server(Config *conf) : _conf(conf) {}
 Server::Server() {}
 
 int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent *> &main_sockets, std::vector<struct kevent *> &monitor_events) {
+	_servers_sockets.push_back(open("123", O_RDONLY));
 	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
 		struct kevent *tmp = new struct kevent;
 		main_sockets.insert(tmp);
@@ -38,7 +39,7 @@ bool Server::_queue_check_in(const struct kevent &event,
 							 std::set<struct kevent *> &checked) {
 
 	for (std::set<struct kevent *>::const_iterator it = checked.begin(); it != checked.end(); ++it) {
-		if ((*it)->data == event.data)
+		if ((*it)->ident == event.ident)
 			return true;
 	}
 	return false;
@@ -51,10 +52,10 @@ int Server::_queue_fd_add(int new_fd, std::vector<struct kevent *> &monitor_even
 
 //	EV_SET(monitor_events.back(), new_fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
 
-	int ret = 0;
-	ret = kevent(kq_fd, *(monitor_events.data()), static_cast<int>(monitor_events.size()), NULL, 0, NULL);
-	if (ret == -1)
-		throw Server_start_exception("In _queue_fd_add");
+//	int ret = 0;
+//	ret = kevent(kq_fd, *(monitor_events.data()), static_cast<int>(monitor_events.size()), NULL, 0, NULL);
+//	if (ret == -1)
+//		throw Server_start_exception("In _queue_fd_add:");
 	return 0;
 }
 
@@ -63,7 +64,7 @@ int Server::_accept_connection(const struct kevent &incoming_connection,
 							   int kq_fd, std::map<int, sockaddr_in> &clients) {
 	sockaddr_in sa_client;
 	socklen_t client_len = sizeof(sa_client);
-	int client_socket = accept(static_cast<int>(incoming_connection.data), (sockaddr *) &sa_client,
+	int client_socket = accept(static_cast<int>(incoming_connection.ident), (sockaddr *) &sa_client,
 							   &client_len);
 	if (client_socket == -1) {
 		throw Server_start_exception("In _accept_connection, ACCEPT:");
@@ -71,15 +72,10 @@ int Server::_accept_connection(const struct kevent &incoming_connection,
 	if (fcntl(client_socket, F_SETFL, O_NONBLOCK) == -1) {
 		throw Server_start_exception("In _accept_connection, FCNTL:");
 	}
-
-	try {
-		_queue_fd_add(client_socket, monitor_events, kq_fd);
-	}
-	catch (std::exception &e) {
-		throw e;
-	}
 	clients[client_socket] = sa_client;
-	return 0;
+//	TODO need some fixes with del new or replace it on stack values
+	monitor_events.push_back(new struct kevent);
+	return client_socket;
 }
 
 int Server::_core_loop() {
@@ -115,14 +111,12 @@ int Server::_core_loop() {
 //	}
 	int ret = 0;
 	struct kevent *tmp_event_list;
-	memset(&tmp_event_list, 0, sizeof(tmp_event_list));
-
-	ret = kevent(kq, *(monitor_events.data()), static_cast<int>(monitor_events.size()), NULL, 0, NULL);
-	if (ret == -1) {
-		throw Server_start_exception("In _core_loop, KEVENT before loop:");
-	}
-
 	while (true) {
+		auto a = (monitor_events.data());
+//		ret = kevent(kq, a, static_cast<int>(monitor_events.size()), NULL, 0, NULL);
+		if (ret == -1) {
+			throw Server_start_exception("In _core_loop, KEVENT before loop:");
+		}
 
 		ret = kevent(kq, NULL, 0, tmp_event_list, 1, NULL);
 		if (ret == -1) {
@@ -133,8 +127,9 @@ int Server::_core_loop() {
 
 			if (_queue_check_in(tmp_event_list[i], main_sockets)) {
 				try {
-					_accept_connection(tmp_event_list[i], monitor_events, kq,
+					int client_socket = _accept_connection(tmp_event_list[i], monitor_events, kq,
 									   client_address_for_sock);
+					_queue_fd_add(client_socket, monitor_events, kq);
 				}
 				catch (std::exception &e) {
 					std::cerr << e.what() << std::endl;

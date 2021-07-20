@@ -16,7 +16,7 @@ private:
 public:
 	static Parser &getInstance();
 
-	Config parseConfig(std::string filename) override;
+	Config parseConfig(std::string filename);
 
 	static int parseClientMaxBodySize(std::ifstream &file);
 };

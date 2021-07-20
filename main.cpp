@@ -3,8 +3,8 @@
 #include "parser/Parser.hpp"
 
 int main() {
-	IParser &ok = Parser::getInstance();
-	Server b(ok.parseConfig("123"));
+//	IParser &ok = Parser::getInstance();
+//	Server b(ok.parseConfig("123"));
 	Server s;
 	s.start();
 }
