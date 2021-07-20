@@ -20,8 +20,10 @@ std::string Server::_get_ip_address(const sockaddr_in &clientData) {
 Server::Server(Config *conf) : _conf(conf) {}
 Server::Server() {}
 
-int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent, SetCompare> &main_sockets,
-												std::vector<struct kevent> &monitor_events) {
+int Server::_queue_init_set_and_vectors_for_core(
+		std::set<struct kevent *, SetCompare> &main_sockets,
+		std::vector<struct kevent> &monitor_events) {
+
 	_servers_sockets.push_back(open("123", O_RDONLY));
 	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
 		monitor_events.resize(monitor_events.size() + 1);
@@ -33,21 +35,10 @@ int Server::_queue_init_set_and_vectors_for_core(std::set<struct kevent, SetComp
 //		main_sockets.insert(tmp);
 		struct kevent *tmp = &monitor_events.back();
 		EV_SET(tmp, *it, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
-		main_sockets.insert(*tmp);
+		main_sockets.insert(tmp);
 	}
 	return 0;
 }
-
-bool Server::_queue_check_in(const struct kevent &event,
-							 std::set<struct kevent, SetCompare> &checked) {
-
-	for (std::set<struct kevent>::const_iterator it = checked.begin(); it != checked.end(); ++it) {
-		if ((*it).ident == event.ident)
-			return true;
-	}
-	return false;
-}
-
 
 int Server::_queue_fd_add(int new_fd, std::vector<struct kevent> &monitor_events,
 						  int kq_fd) {
@@ -86,7 +77,7 @@ int Server::_core_loop() {
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
 	//TODO need understand where need add fcntl call for nonblock fd
 
-	std::set<struct kevent, SetCompare> main_sockets;
+	std::set<struct kevent *, SetCompare> main_sockets;
 	std::vector<struct kevent> monitor_events;
 	std::map<int, sockaddr_in> client_address_for_sock;
 
