@@ -148,7 +148,7 @@ int Server::start() {
 		_socket_init();
 		std::cout << "Bind sockets successful, server start" << std::endl;
 		//TODO this crutch need removed
-		_servers_sockets.push_back(_m_socket);
+//		_servers_sockets.push_back(_m_socket);
 		_core_loop();
 	}
 	catch (std::exception &e) {
