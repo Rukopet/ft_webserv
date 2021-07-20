@@ -10,6 +10,6 @@ TEST(CheckCheck, CheckCheck_new) {
 	assert(check() == 1);
 }
 
-class SuiteName : public ::testing::Test {
+class ExceptionTest : public ::testing::Test {
 	
 };
