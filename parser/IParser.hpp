@@ -6,8 +6,11 @@
 #define FT_WEBSERVER_IPARSER_HPP
 
 
+#include "Config.hpp"
+
 class IParser {
-	virtual Config parseConfig(std::string filename) = 0;
+public:
+	virtual Config parseConfig(std::string &filename) = 0;
 };
 
 

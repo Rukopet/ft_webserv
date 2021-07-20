@@ -31,7 +31,7 @@ ServerConfig Parser::parseServer(std::ifstream &file) {
 	return ServerConfig(errorPages, clientMaxBodySize, routeConfigs, port, host, serverNames);
 }
 
-Config Parser::parseConfig(std::string filename) {
+Config Parser::parseConfig(std::string &filename) {
 	std::ifstream file(filename);
 	std::map<int, std::vector<ServerConfig>> servers;
 	while (!file.eof()) {

@@ -7,13 +7,13 @@
 
 #include "IParser.hpp"
 
-class Parser : IParser {
+class Parser : public IParser {
 private:
 	Parser();
 	static Parser* instance;
 public:
 	static Parser &getInstance();
-	Config parseConfig(std::string filename) override;
+	virtual Config parseConfig(std::string &filename);
 
 	ServerConfig parseServer(std::ifstream &file);
 };
