@@ -34,7 +34,8 @@ int Server::_queue_init_set_and_vectors_for_core(
 		if (fcntl(*it, F_SETFL, O_NONBLOCK) == -1)
 			return -1;
 		struct kevent *tmp = &monitor_events.back();
-		EV_SET(tmp, *it, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
+		//TODO be care with EV_EOF flag
+		EV_SET(tmp, *it, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, NOTE_WRITE, 0,	NULL);
 		main_sockets.insert(*tmp);
 	}
 	return 0;
@@ -87,22 +88,7 @@ int Server::_core_loop() {
 		throw Server_start_exception("In _core_loop, when events being initializing:");
 
 
-//	while (true) {
-//		int sock_client;
-//		sockaddr_in sa_client;
-//		socklen_t client_len = sizeof(sa_client);
-//
-//		//TODO before that need epoll event check, now that only prototype (
-//
-//		// ...epoll code here...
-//
-//		if (sock_client = accept(_m_socket, (sockaddr*)&sa_client, &client_len) == -1) {
-//			std::cerr << "ERROR IN ACCEPT";
-//			continue;
-//		}
-//		std::string ip_client = "0"; //some converts with ntohs()
-//		_client_handler(sock_client, ip_client);
-//	}
+
 
 	int ret = 0;
 
@@ -120,8 +106,8 @@ int Server::_core_loop() {
 			throw Server_start_exception();
 		}
 
+		Logger::getInstance().add_line("NUMBER OF EVENTS: " + std::to_string(ret));
 		for (int i = 0; i < ret; ++i) {
-
 			if (main_sockets.count(tmp_event_list[i]) > 0) {
 				try {
 					int client_socket = _accept_connection(tmp_event_list[i], monitor_events, kq,
@@ -165,6 +151,7 @@ int Server::start() {
 //TODO need replace that crutch for normal config value
 #define MAX_BODY_SIZE 1
 int Server::_client_handler(int sock_client, std::string &ip_client) {
+	static int count_empty_shit = 0;
 	int len_buffer = 1048576 * MAX_BODY_SIZE;
 	char buffer[len_buffer];
 	memset(&buffer, 0, len_buffer);
@@ -174,10 +161,81 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 		throw Server_start_exception("IN CLIENT HANDLER: while read:");
 	}
 	buffer[ret] = '\0';
-	
-	std::cout << buffer << std::endl;
-	std::cout << ip_client << std::endl;
-	return 0;
+
+	if (ret != 0) {
+		std::cout << buffer << std::endl;
+		std::string log = "\nCLIENT IP: ";
+		log += ip_client;
+		log += "\n\n";
+		log += buffer;
+		Logger::getInstance().add_line(log);
+	}
+	else {
+		count_empty_shit += 1;
+	}
+	std::cout << count_empty_shit << std::endl;
+	char *asd = "HTTP/1.1 200 OK\n"
+				"Content-Encoding: gzip\n"
+				"Accept-Ranges: bytes\n"
+				"Age: 523659\n"
+				"Cache-Control: max-age=604800\n"
+				"Content-Type: text/html; charset=UTF-8\n"
+				"Date: Wed, 21 Jul 2021 15:14:19 GMT\n"
+				"Etag: \"3147526947\"\n"
+				"Expires: Wed, 28 Jul 2021 15:14:19 GMT\n"
+				"Last-Modified: Thu, 17 Oct 2019 07:18:26 GMT\n"
+				"Server: ECS (nyb/1D13)\n"
+				"Vary: Accept-Encoding\n"
+				"X-Cache: HIT\n"
+				"Content-Length: 648\n\n""<!doctype html>\n"
+				"<html>\n"
+				"<head>\n"
+				"    <title>Example Domain</title>\n"
+				"\n"
+				"    <meta charset=\"utf-8\" />\n"
+				"    <meta http-equiv=\"Content-type\" content=\"text/html; charset=utf-8\" />\n"
+				"    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n"
+				"    <style type=\"text/css\">\n"
+				"    body {\n"
+				"        background-color: #f0f0f2;\n"
+				"        margin: 0;\n"
+				"        padding: 0;\n"
+				"        font-family: -apple-system, system-ui, BlinkMacSystemFont, \"Segoe UI\", \"Open Sans\", \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n"
+				"        \n"
+				"    }\n"
+				"    div {\n"
+				"        width: 600px;\n"
+				"        margin: 5em auto;\n"
+				"        padding: 2em;\n"
+				"        background-color: #fdfdff;\n"
+				"        border-radius: 0.5em;\n"
+				"        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);\n"
+				"    }\n"
+				"    a:link, a:visited {\n"
+				"        color: #38488f;\n"
+				"        text-decoration: none;\n"
+				"    }\n"
+				"    @media (max-width: 700px) {\n"
+				"        div {\n"
+				"            margin: 0 auto;\n"
+				"            width: auto;\n"
+				"        }\n"
+				"    }\n"
+				"    </style>    \n"
+				"</head>\n"
+				"\n"
+				"<body>\n"
+				"<div>\n"
+				"    <h1>Example Domain</h1>\n"
+				"    <p>This domain is for use in illustrative examples in documents. You may use this\n"
+				"    domain in literature without prior coordination or asking for permission.</p>\n"
+				"    <p><a href=\"https://www.iana.org/domains/example\">More information...</a></p>\n"
+				"</div>\n"
+				"</body>\n"
+				"</html>\n\n";
+	std::cout << asd << std::endl;
+	recv(sock_client, (void*)asd, strlen(asd), 0);
+	return count_empty_shit;
 }
 
 //TODO need adding port for that, dont know how handle it, i think this after parsing config

@@ -43,3 +43,6 @@ CMakeLists.txt
 # Files for test behavior
 test_behavior.cpp
 test
+
+logs
+logs/*

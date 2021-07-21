@@ -8,7 +8,7 @@
 class Logger {
 private:
 	Logger();
-	static Logger *instance;
+	static Logger instance;
 	std::fstream _log_fd_fstream;
 	static std::string getFilename();
 

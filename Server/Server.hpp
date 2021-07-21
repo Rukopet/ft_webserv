@@ -21,6 +21,7 @@
 #include <vector>
 #include <map>
 #include "../parser/Config.hpp"
+#include "../Logger/Logger.hpp"
 
 
 struct SetCompare;
