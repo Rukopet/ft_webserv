@@ -48,7 +48,7 @@ private:
 
 	int	_queue_fd_remove();
 	int _queue_init_set_and_vectors_for_core(
-			std::set<struct kevent *, SetCompare> &main_sockets, std::vector<struct kevent> &monitor_events);
+			std::set<struct kevent, SetCompare> &main_sockets, std::vector<struct kevent> &monitor_events);
 
 // for string ip address, need replace on some good shit
 //----------------------------------------------------------------------------//
@@ -91,11 +91,8 @@ struct Server_start_exception : public std::exception {
 // Comparator for Set
 //----------------------------------------------------------------------------//
 struct SetCompare {
-	bool operator()(const struct kevent *a, const struct kevent *b) const {
-//		const int a_val = a->ident;
-//		const int b_val = b->ident;
-		std::cout << a->ident << " | " << b->ident << std::endl;
-		return std::less<uintptr_t>{}(a->ident, b->ident);
+	bool operator()(const struct kevent &a, const struct kevent &b) const {
+		return a.ident < b.ident;
 	}
 
 
