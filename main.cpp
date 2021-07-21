@@ -1,11 +1,11 @@
 #include "Server/Server.hpp"
-#include "parser/IParser.hpp"
-#include "parser/Parser.hpp"
+#include "Logger/Logger.hpp"
 
 int main() {
 //	IParser &ok = Parser::getInstance();
 //	Server b(ok.parseConfig("123"));
-	Server s;
-	s.start();
+	Logger::getInstance().add_line("asd");
+//	Server s;
+//	s.start();
 
 }

@@ -174,7 +174,9 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 		throw Server_start_exception("IN CLIENT HANDLER: while read:");
 	}
 	buffer[ret] = '\0';
+	
 	std::cout << buffer << std::endl;
+	std::cout << ip_client << std::endl;
 	return 0;
 }
 

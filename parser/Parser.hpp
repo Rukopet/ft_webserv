@@ -10,11 +10,11 @@
 class Parser : public IParser {
 private:
 	Parser();
-	static Parser* instance;
+	static Parser instance;
 	static ServerConfig parseServer(std::ifstream &file);
 	static std::pair<int, std::string> parseErrorParam(std::ifstream &file);
 public:
-	static Parser &getInstance();
+	static Parser getInstance();
 
 	Config parseConfig(std::string filename);
 

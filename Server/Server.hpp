@@ -59,6 +59,7 @@ private:
 
 private:
 	int _m_socket;
+	int	_log_fd;
 	std::vector<int> _servers_sockets;
 	Config *_conf;
 };
