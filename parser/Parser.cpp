@@ -119,17 +119,19 @@ std::set<std::string> Parser::parseAllowedMethods(std::ifstream &file) {
 	std::stringstream inDataStream(inData);
 	while (inDataStream >> inData) {
 		if (allowedMethods.count(inData)) {
-			std::cerr << "repeated allowed_method in server_names" << std::endl;
+			std::cerr << "repeated method in methods" << std::endl;
 			exit(-1);
 		}
-		if (inData != "GET" && inData != "POST" && inData != "DELETE") {
-			std::cerr << "not supported method in allowed_methods" << std::endl;
+		std::string tmp[] = {"get", "GET", "post", "POST", "DELETE", "delete", "PUT", "put"};
+		std::set<std::string> supportedMethods(tmp, tmp + sizeof(tmp) / sizeof (tmp[0]));
+		if (supportedMethods.count(inData) == 0) {
+			std::cerr << "not supported method in methods" << std::endl;
 			exit(-1);
 		}
 		allowedMethods.insert(inData);
 	}
 	if (allowedMethods.empty()) {
-		std::cerr << "Empty allowed_methods" << std::endl;
+		std::cerr << "Empty methods" << std::endl;
 		exit(-1);
 	}
 	return (allowedMethods);
@@ -176,7 +178,7 @@ std::pair<std::string, RouteConfig> Parser::parseRouteConfig(std::ifstream &file
 		std::cerr << "excepted { for location block" << std::endl;
 		exit(-1);
 	}
-	while (!(file >> inData) && inData != "}") {
+	while (!(file >> inData) || inData != "}") {
 		if (inData == "redirection") {
 			if (!redirection.empty()) {
 				std::cerr << "redirection repeat" << std::endl;
@@ -197,9 +199,9 @@ std::pair<std::string, RouteConfig> Parser::parseRouteConfig(std::ifstream &file
 			defaultFile = parseDefaultFile(file);
 		} else if (inData == "autoindex") {
 			autoindex = parseAutoindex(file);
-		} else if (inData == "allowed_methods") {
+		} else if (inData == "methods") {
 			if (!allowedMethods.empty()) {
-				std::cerr << "allowed_methods repeat" << std::endl;
+				std::cerr << "methods repeat" << std::endl;
 				exit(-1);
 			}
 			allowedMethods = parseAllowedMethods(file);
@@ -244,7 +246,7 @@ ServerConfig Parser::parseServer(std::ifstream &file) {
 			std::cout << "{ excepted" << std::endl;
 			exit(-1);
 		}
-		while (!(file >> inData) && inData != "}") {
+		while (!(file >> inData) || inData != "}") {
 			if (inData == "error_page") {
 				std::pair<int, std::string> errorPage = parseErrorParam(file);
 				if (errorPages.find(errorPage.first) != errorPages.end()) {
@@ -272,11 +274,11 @@ ServerConfig Parser::parseServer(std::ifstream &file) {
 				port = parsePort(file);
 			} else if (inData == "location") {
 				std::pair<std::string, RouteConfig> routeConfig = parseRouteConfig(file);
-				if (routeConfigs.find(routeConfig.first) == routeConfigs.end()) {
+				if (routeConfigs.find(routeConfig.first) != routeConfigs.end()) {
 					std::cerr << "repeated location " + routeConfig.first << " rule for the one server" << std::endl;
 					exit(-1);
 				}
-				routeConfigs.at(routeConfig.first) = routeConfig.second;
+				routeConfigs[routeConfig.first] = routeConfig.second;
 			} else if (inData == "server_name") {
 				if (!serverNames.empty()) {
 					std::cerr << "repeated server_name in the one server" << std::endl;
@@ -293,7 +295,7 @@ ServerConfig Parser::parseServer(std::ifstream &file) {
 	if (port == -1 || host.empty()) {
 		std::cout << "haven't port or host for server config" << std::endl;
 		exit(-1);
-	} else if (file.eof()) {
+	} else if (file.eof() && inData != "}") {
 		std::cout << "excepted } for server block" << std::endl;
 		exit(-1);
 	}
@@ -319,4 +321,6 @@ Config Parser::parseConfig(std::string &filename) {
 Parser &Parser::getInstance() {
 	return *instance;
 }
+
+Parser::Parser() {}
 

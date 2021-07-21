@@ -21,7 +21,7 @@ public:
 
 	static Parser &getInstance();
 
-	Config parseConfig(std::string &filename) override;
+	virtual Config parseConfig(std::string &filename);
 
 	std::pair<std::string, RouteConfig> parseRouteConfig(std::ifstream &file);
 
