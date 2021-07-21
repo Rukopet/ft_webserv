@@ -72,12 +72,17 @@ int Server::_accept_connection(const struct kevent &incoming_connection,
 	return client_socket;
 }
 
+bool cmp(const struct kevent *a, const struct kevent *b) {
+	std::cout << a->ident << " | " << b->ident << std::endl;
+	return a->ident < b->ident;
+}
+
 int Server::_core_loop() {
 
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
 	//TODO need understand where need add fcntl call for nonblock fd
 
-	std::set<struct kevent *, SetCompare> main_sockets;
+	std::set<struct kevent *, decltype(cmp)*> main_sockets(cmp);
 	std::vector<struct kevent> monitor_events;
 	std::map<int, sockaddr_in> client_address_for_sock;
 
@@ -120,7 +125,7 @@ int Server::_core_loop() {
 
 		for (int i = 0; i < ret; ++i) {
 			struct kevent *current_connection = &tmp_event_list[i];
-			if (main_sockets.count(current_connection) != 0) {
+			if (main_sockets.count(current_connection) > 0) {
 				try {
 					int client_socket = _accept_connection(tmp_event_list[i], monitor_events, kq,
 									   client_address_for_sock);
