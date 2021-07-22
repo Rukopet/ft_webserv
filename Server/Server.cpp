@@ -238,8 +238,6 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 }
 
 //TODO need adding port for that, dont know how handle it, i think this after parsing config
-#define SOME_PORT 10000
-
 int Server::_socket_init() {
 	for (std::set<int>::iterator it = _conf.getPorts().begin(); it != _conf.getPorts().end(); ++it) {
 
@@ -266,8 +264,8 @@ int Server::_socket_init() {
 
 		if (listen(m_socket, MAX_CLIENTS) != 0) {
 			throw Server_start_exception("IN SOCKET INIT: in listen func:");
-			_servers_sockets.push_back(m_socket);
 		}
+		_servers_sockets.push_back(m_socket);
 	}
 		return 0;
 }
