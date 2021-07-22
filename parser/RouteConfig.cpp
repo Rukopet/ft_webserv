@@ -6,12 +6,12 @@
 
 #include <utility>
 
-RouteConfig::RouteConfig(std::set<std::string> allowedMethods, const std::string &redirection,
+RouteConfig::RouteConfig(const std::set<std::string>& allowedMethods, const std::string &redirection,
 						 const std::string &root, bool autoindex, const std::string &defaultFile,
-						 const std::pair<std::string, std::string> &cgi) : allowedMethods(std::move(allowedMethods)),
-																		   redirection(redirection), root(root),
-																		   autoindex(autoindex),
-																		   defaultFile(defaultFile), cgi(cgi) {}
+						 const std::map<std::string, std::string> &cgi) : allowedMethods(allowedMethods),
+																		  redirection(redirection), root(root),
+																		  autoindex(autoindex),
+																		  defaultFile(defaultFile), cgi(cgi) {}
 
 const std::set<std::string> &RouteConfig::getAllowedMethods() const {
 	return allowedMethods;
@@ -33,6 +33,22 @@ const std::string &RouteConfig::getDefaultFile() const {
 	return defaultFile;
 }
 
-const std::pair<std::string, std::string> &RouteConfig::getCgi() const {
-	return cgi;
+RouteConfig::RouteConfig() {
+
 }
+
+const std::string &RouteConfig::getCgi(std::string &extension) const {
+	return cgi.at(extension);
+}
+
+const std::string &RouteConfig::getUploadFilesPath() const {
+	return uploadFilesPath;
+}
+
+RouteConfig::RouteConfig(const std::string &uploadFilesPath, const std::set<std::string> &allowedMethods,
+						 const std::string &redirection, const std::string &root, const std::string &defaultFile,
+						 bool autoindex, const std::map<std::string, std::string> &cgi) : uploadFilesPath(
+		uploadFilesPath), allowedMethods(allowedMethods), redirection(redirection), root(root),
+																						  defaultFile(defaultFile),
+																						  autoindex(autoindex),
+																						  cgi(cgi) {}

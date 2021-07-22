@@ -17,8 +17,7 @@ std::string Server::_get_ip_address(const sockaddr_in &clientData) {
 }
 //----------------------------------------------------------------------------//
 
-Server::Server(Config *conf) : _conf(conf) {}
-Server::Server() {}
+Server::Server(Config &conf) : _conf(conf) {}
 
 int Server::_queue_init_set_and_vectors_for_core(
 		std::set<struct kevent, SetCompare> &main_sockets,
@@ -242,27 +241,35 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 #define SOME_PORT 10000
 
 int Server::_socket_init() {
-	_m_socket = socket(PF_INET, SOCK_STREAM, 0);
-	if (_m_socket == -1) {
-		throw Server_start_exception("IN SOCKET INIT: in socket:");
+	for (std::set<int>::iterator it = _conf.getPorts().begin(); it != _conf.getPorts().end(); ++it) {
+
+		int m_socket = 0;
+
+		m_socket = socket(PF_INET, SOCK_STREAM, 0);
+		if (m_socket == -1) {
+			throw Server_start_exception("IN SOCKET INIT: in socket:");
+		}
+		int port = *it;
+
+		sockaddr_in sa_server;
+		memset(&sa_server, 0, sizeof(sa_server));
+		sa_server.sin_addr.s_addr = INADDR_ANY;
+		sa_server.sin_family = AF_INET;
+		sa_server.sin_port = htons(port);
+
+
+		// https://www.opennet.ru/docs/RUS/socket/node3.html
+		// explain how and why cast sockaddr_in to sockaddr
+		if (bind(m_socket, (sockaddr*)&sa_server, sizeof(sa_server)) != 0) {
+			throw Server_start_exception("IN SOCKET INIT: in bind func:");
+		}
+
+		if (listen(m_socket, MAX_CLIENTS) != 0) {
+			throw Server_start_exception("IN SOCKET INIT: in listen func:");
+			_servers_sockets.push_back(m_socket);
+		}
 	}
-
-	sockaddr_in sa_server {0};
-	sa_server.sin_addr.s_addr = INADDR_ANY;
-	sa_server.sin_family = AF_INET;
-	sa_server.sin_port = htons(SOME_PORT);
-
-
-	// https://www.opennet.ru/docs/RUS/socket/node3.html
-	// explain how and why cast sockaddr_in to sockaddr
-	if (bind(_m_socket, (sockaddr*)&sa_server, sizeof(sa_server)) != 0) {
-		throw Server_start_exception("IN SOCKET INIT: in bind func:");
-	}
-
-	if (listen(_m_socket, MAX_CLIENTS) != 0) {
-		throw Server_start_exception("IN SOCKET INIT: in listen func:");
-	}
-	return 0;
+		return 0;
 }
 
 

@@ -30,8 +30,7 @@ struct SetCompare;
 
 class Server {
 public:
-	Server(Config *conf);
-	Server();
+	Server(Config &conf);
 	int start();
 
 private:
@@ -59,10 +58,9 @@ private:
 
 
 private:
-	int _m_socket;
 	int	_log_fd;
 	std::vector<int> _servers_sockets;
-	Config *_conf;
+	Config &_conf;
 };
 
 

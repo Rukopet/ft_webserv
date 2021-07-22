@@ -13,7 +13,7 @@
 class ServerConfig {
 private:
 	std::map<int, std::string> errorPages;
-	int clientMaxBodySize = 1;
+	int clientMaxBodySize;
 	std::map<std::string, RouteConfig> routeConfigs;
 	int port;
 	std::string host;

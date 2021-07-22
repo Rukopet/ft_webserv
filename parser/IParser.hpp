@@ -10,7 +10,7 @@
 
 class IParser {
 public:
-	virtual Config parseConfig(std::string &filename) = 0;
+	virtual Config parseConfig(const std::string &filename) = 0;
 };
 
 
