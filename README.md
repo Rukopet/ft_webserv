@@ -9,3 +9,5 @@ https://code-with-me.jetbrains.com/JKBjqRnIzsQNRYkgilGcDw#p=PY&fp=EE93AF8792B14A
 https://code-with-me.jetbrains.com/sHYW7STJQ25xSS6ZMOelZg#p=PY&fp=D27C64F91C93C24A230172CC11AAF08230EDFF9516B542E5888B5F20A1B00E6C
 
 https://git.asi.ru/solitude/school-schedule/
+
+https://docs.google.com/presentation/d/1MoCbc1aY6xdnWbOirPst4HawYcoYl0Mk/edit?usp=sharing&ouid=114954657557536800893&rtpof=true&sd=true
