@@ -4,12 +4,12 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
+
 // for kqueue
 #include <sys/event.h>
 #include <sys/fcntl.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-
 
 // for sockaddr_in struct
 #include <netinet/in.h>
@@ -22,7 +22,6 @@
 #include <map>
 #include "../parser/Config.hpp"
 #include "../Logger/Logger.hpp"
-
 
 struct SetCompare;
 

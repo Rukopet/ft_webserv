@@ -10,7 +10,7 @@ add_executable(ft_webserver main.cpp other_example_for_tests.cpp Server/Server.c
 add_executable(All_tests UnitTests/Example_test.cpp other_example_for_tests.cpp UnitTests/ExeptionTest.cpp)
 add_executable(shit main_for_check_nonblock.cpp)
 add_executable(parser parser/Config.cpp parser/Parser.cpp parser/RouteConfig.cpp parser/IParser.hpp parser/ServerConfig.cpp)
-add_executable(test_behavior parser/Config.cpp parser/Parser.cpp parser/RouteConfig.cpp parser/IParser.hpp parser/ServerConfig.cpp test_behavior.cpp)
+add_executable(test_behavior parser/Config.cpp parser/Parser.cpp parser/RouteConfig.cpp parser/IParser.hpp parser/ServerConfig.cpp)
 
 #for google tests
 add_subdirectory(googletest)

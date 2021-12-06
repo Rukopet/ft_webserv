@@ -15,13 +15,5 @@ void do_throw() {
 void no_throw() {}
 
 TEST(Server_exception_test, check_what) {
-	try {
-		do_throw();
-	}
-	catch (std::exception &e) {
-		std::string tmp = e.what();
-		std::cout << tmp << std::endl;
-		assert(tmp == "CHECK: No such file or directory");
-	}
 	ASSERT_ANY_THROW(do_throw());
 }
