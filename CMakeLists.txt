@@ -4,7 +4,7 @@ project(ft_webserver)
 set(CMAKE_CXX_STANDARD 98)
 
 # this executable for simple RUN, and DEBUG
-add_executable(ft_webserver main.cpp other_example_for_tests.cpp Server/Server.cpp Logger/Logger.cpp Logger/Logger.hpp)
+add_executable(ft_webserver main.cpp other_example_for_tests.cpp Server/Server.cpp Logger/Logger.cpp Logger/Logger.hpp Parser/Parser.cpp Parser/ServerConfig.cpp Parser/Config.cpp Parser/RouteConfig.cpp)
 
 # this executable for google tests dont need adding main to this. Also u can RUN with coverage
 add_executable(All_tests UnitTests/Example_test.cpp other_example_for_tests.cpp UnitTests/ExeptionTest.cpp)

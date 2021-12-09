@@ -24,15 +24,16 @@ int Server::_queue_init_set_and_vectors_for_core(
 		std::vector<struct kevent> &monitor_events) {
 
 //	_servers_sockets.push_back(open("123", O_RDONLY));
-	_servers_sockets.push_back(_m_socket);
 	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
-		monitor_events.resize(monitor_events.size() + 1);
+		monitor_events.resize(monitor_events.size() +  1);
+
 
 		//TODO replace this block to the sock init
 		// non checked flags on events
 		if (fcntl(*it, F_SETFL, O_NONBLOCK) == -1)
 			return -1;
 		struct kevent *tmp = &monitor_events.back();
+
 		//TODO be care with EV_EOF flag
 		EV_SET(tmp, *it, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, NOTE_WRITE, 0,	NULL);
 		main_sockets.insert(*tmp);
@@ -125,9 +126,7 @@ int Server::_core_loop() {
 				std::string client_ip = Server::_get_ip_address(sa_client);
 				_client_handler(client_socket_fd, client_ip);
 			}
-
 		}
-
 	}
 }
 
@@ -239,15 +238,15 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 
 //TODO need adding port for that, dont know how handle it, i think this after parsing config
 int Server::_socket_init() {
-	for (std::set<int>::iterator it = _conf.getPorts().begin(); it != _conf.getPorts().end(); ++it) {
-
+	const std::set<int> &ports = _conf.getPorts();
+	for (std::set<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
 		int m_socket = 0;
+		int port = *it;
 
 		m_socket = socket(PF_INET, SOCK_STREAM, 0);
 		if (m_socket == -1) {
 			throw Server_start_exception("IN SOCKET INIT: in socket:");
 		}
-		int port = *it;
 
 		sockaddr_in sa_server;
 		memset(&sa_server, 0, sizeof(sa_server));

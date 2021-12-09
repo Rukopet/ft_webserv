@@ -18,6 +18,7 @@ private:
 	int port;
 	std::string host;
 	std::set<std::string> serverNames;
+
 public:
 	ServerConfig(const std::map<int, std::string> &errorPages, int clientMaxBodySize,
 				 const std::map<std::string, RouteConfig> &routeConfigs, int port, const std::string &host,
