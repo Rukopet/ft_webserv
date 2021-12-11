@@ -6,8 +6,14 @@
 #include "../Client/SocketBase.hpp"
 #include "Server.hpp"
 
+struct MapCompare {
+	bool operator()(const struct kevent &a, const struct kevent &b) const {
+		return a.ident < b.ident;
+	};
+};
+
+
 class SocketBase;
-struct SetCompare;
 
 class ConnectionsSockets {
 public:
@@ -20,9 +26,10 @@ public:
 	void unbindPorts();
 
 private:
-	std::map<struct kevent, SocketBase, SetCompare>	_connections;
+	std::map<struct kevent, SocketBase, MapCompare>	_connections;
 	std::vector<struct kevent>			_all_events;
 };
+
 
 
 #endif //FT_WEBSERVER_CONNECTIONSSOCKETS_HPP

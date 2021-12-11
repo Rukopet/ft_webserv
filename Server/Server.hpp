@@ -89,6 +89,8 @@ struct SetCompare {
 	bool operator()(const struct kevent &a, const struct kevent &b) const {
 		return a.ident < b.ident;
 	}
+
+
 //----------------------------------------------------------------------------//
 
 };
