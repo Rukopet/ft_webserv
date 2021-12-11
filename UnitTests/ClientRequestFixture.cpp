@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
 #include "../Client/Request.hpp"
 
-
-class RequestFixture : public ::testing::Test {
+class ClientRequestFixture : public ::testing::Test {
 
 protected:
 	virtual void TearDown() {
@@ -22,7 +21,7 @@ protected:
 	std::string *equality2;
 };
 
-TEST_F(RequestFixture, CheckDropMethod) {
+TEST_F(ClientRequestFixture, CheckDropMethod) {
 	ASSERT_TRUE(testRequest->isEmpty());
 	*testRequest += *equality;
 	ASSERT_TRUE(testRequest->getRequest() == *equality);
@@ -31,9 +30,14 @@ TEST_F(RequestFixture, CheckDropMethod) {
 }
 
 
-TEST_F(RequestFixture, CheckOperatorsWithCharString) {
+TEST_F(ClientRequestFixture, CheckOperatorsWithCharString) {
 	*testRequest += equality2->c_str();
 	ASSERT_TRUE(testRequest->getRequest() == *equality2);
 	testRequest->dropRequest();
 	ASSERT_TRUE(testRequest->isEmpty());
+}
+
+
+TEST_F(ClientRequestFixture, TestName) {
+
 }
