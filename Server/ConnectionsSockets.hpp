@@ -4,7 +4,10 @@
 #include <map>
 #include <vector>
 #include "../Client/SocketBase.hpp"
+#include "Server.hpp"
 
+class SocketBase;
+struct SetCompare;
 
 class ConnectionsSockets {
 public:
@@ -17,7 +20,7 @@ public:
 	void unbindPorts();
 
 private:
-	std::map<struct kevent, SocketBase>	_connections;
+	std::map<struct kevent, SocketBase, SetCompare>	_connections;
 	std::vector<struct kevent>			_all_events;
 };
 

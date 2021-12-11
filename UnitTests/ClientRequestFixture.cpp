@@ -53,7 +53,7 @@ protected:
 //		[6] = {char} 0 '\0'
 //		[7] = {char} 0 '\0'
 
-		testClient = new SocketClient(event, "127.0.0.1");
+		testClient = new SocketClient(event, 0);
 		testRequest = new Request;
 		equality = new std::string("Check drop method");
 		equality2 = new std::string("Another text");

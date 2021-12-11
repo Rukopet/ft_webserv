@@ -1,5 +1,6 @@
 #include "ConnectionsSockets.hpp"
 #include "Server.hpp"
+#include "../Client/SocketMain.hpp"
 
 ConnectionsSockets::ConnectionsSockets() {}
 
@@ -30,7 +31,15 @@ void ConnectionsSockets::bindSocket(int port) {
 	if (listen(m_socket, MAX_CLIENTS) != 0) {
 		throw Server_start_exception("IN SOCKET INIT: in listen func:");
 	}
-	this->_all_events
-	_servers_sockets.push_back(m_socket);
 
+	this->_all_events.resize(this->_all_events.size() + 1);
+	struct kevent *tmp_event = &this->_all_events.back();
+	EV_SET(tmp_event, m_socket, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, NOTE_WRITE, 0, NULL);
+
+	SocketMain	socket(port, m_socket);
+	socket.setNonBlock();
+
+	this->_connections.insert(this->_connections.begin(),
+			std::pair<struct kevent, SocketBase>(
+					*tmp_event, socket));
 }

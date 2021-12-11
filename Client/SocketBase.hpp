@@ -2,22 +2,23 @@
 #define FT_WEBSERVER_SOCKETBASE_HPP
 
 #include <sys/event.h>
+#include <sys/fcntl.h>
 #include "Request.hpp"
+#include "../Server/Server.hpp"
 
 class SocketBase {
 public:
-	SocketBase(
-			int		fd,
+	SocketBase(int		fd,
 			const	std::string &ip_address,
 			bool	isMainSocket,
-			int		port
-			) {
+			int		port)
+			{
 
 		this->_ip_address = ip_address;
 		this->current_request.dropRequest();
 		this->_isMainSocket = isMainSocket;
 		this->_port = port;
-		this->setFd(fd);
+		this->_fd = fd;
 
 	};
 
@@ -30,11 +31,10 @@ public:
 		return _fd;
 	}
 
-	void setFd(int fd) {
-		_fd = fd;
-	}
-
-	void setNonBlockFile();
+	void setNonBlock() {
+		if (fcntl(_fd, F_SETFL, O_NONBLOCK) == -1)
+			throw Server_start_exception("IN SOCKET INIT: in fcntl func:");
+	};
 
 public:
 	Request		current_request;

@@ -6,7 +6,7 @@
 
 class SocketMain : public SocketBase {
 public:
-	SocketMain(int port);
+	SocketMain(int port, int fd);
 
 private:
 	int		_maxClients;
