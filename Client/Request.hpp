@@ -2,9 +2,9 @@
 #define FT_WEBSERVER_REQUEST_HPP
 
 #include <iostream>
-#include "IRequest.hpp"
+#include "RequestBase.hpp"
 
-class Request : public IRequest {
+class Request : public RequestBase {
 public:
 	Request();
 

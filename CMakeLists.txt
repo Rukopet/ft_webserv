@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 project(ft_webserver)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
-set(SOURCE_FILES main.cpp other_example_for_tests.cpp Server/Server.cpp Logger/Logger.cpp Logger/Logger.hpp Parser/Parser.cpp Parser/ServerConfig.cpp Parser/Config.cpp Parser/RouteConfig.cpp Client/Client.cpp Client/Client.hpp Client/Request.cpp Client/Request.hpp Client/IClient.hpp Client/IRequest.hpp Client/Request.cpp Client/Request.hpp)
+set(SOURCE_FILES main.cpp other_example_for_tests.cpp Server/Server.cpp Logger/Logger.cpp Logger/Logger.hpp Parser/Parser.cpp Parser/ServerConfig.cpp Parser/Config.cpp Parser/RouteConfig.cpp Client/Client.cpp Client/Client.hpp Client/Request.cpp Client/Request.hpp Client/ClientBase.hpp Client/RequestBase.hpp Client/Request.cpp Client/Request.hpp)
 set(SOURCES_FOR_TEST Client/Request.cpp Client/Client.cpp)
 set(TESTS_SOURCE UnitTests/ClientRequestFixture.cpp)
 

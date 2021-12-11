@@ -2,15 +2,13 @@
 #define FT_WEBSERVER_CLIENT_HPP
 
 #include <iostream>
+#include "ClientBase.hpp"
 
-class Client {
+
+class Client : public ClientBase {
 public:
 	Client();
 	virtual ~Client();
-
-private:
-	std::string _ip_address;
-	std::string _current_request;
 };
 
 

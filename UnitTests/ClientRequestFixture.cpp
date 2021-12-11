@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "../Client/Request.hpp"
+#include "../Client/Client.hpp"
 
 class ClientRequestFixture : public ::testing::Test {
 
@@ -16,6 +17,7 @@ protected:
 		equality2 = new std::string("Check drop method");
 	}
 
+	Client	*testClient;
 	Request *testRequest;
 	std::string *equality;
 	std::string *equality2;

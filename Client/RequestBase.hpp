@@ -1,14 +1,14 @@
-#ifndef FT_WEBSERVER_IREQUEST_HPP
-#define FT_WEBSERVER_IREQUEST_HPP
+#ifndef FT_WEBSERVER_REQUESTBASE_HPP
+#define FT_WEBSERVER_REQUESTBASE_HPP
 
 #include <iostream>
 
-class IRequest {
+class RequestBase {
 protected:
 	std::string _request;
 
 public:
-	IRequest() {}
+	RequestBase() {}
 
 	const std::string &getRequest() const {
 		return _request;
@@ -20,19 +20,19 @@ public:
 
 	virtual void dropRequest() = 0;
 
-	IRequest &operator+=(const IRequest &rhs) {
+	RequestBase &operator+=(const RequestBase &rhs) {
 		this->_request += rhs._request;
 		return *this;
 	}
-	IRequest &operator+=(const char *rhs) {
+	RequestBase &operator+=(const char *rhs) {
 		this->_request += rhs;
 		return *this;
 	}
-	IRequest &operator+=(const std::string &rhs) {
+	RequestBase &operator+=(const std::string &rhs) {
 		this->_request += rhs;
 		return *this;
 	}
 };
 
 
-#endif //FT_WEBSERVER_IREQUEST_HPP
+#endif //FT_WEBSERVER_REQUESTBASE_HPP

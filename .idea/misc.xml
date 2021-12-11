@@ -9,5 +9,8 @@
     <libraryRoots>
       <file path="$PROJECT_DIR$/googletest" />
     </libraryRoots>
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/logs" />
+    </excludeRoots>
   </component>
 </project>
