@@ -52,6 +52,7 @@ private:
 private:
 	std::vector<int> _servers_sockets;
 	Config &_conf;
+
 };
 
 
@@ -78,15 +79,12 @@ struct Server_start_exception : public std::exception {
 
 
 
-
 // Comparator for Set
 //----------------------------------------------------------------------------//
 struct SetCompare {
 	bool operator()(const struct kevent &a, const struct kevent &b) const {
 		return a.ident < b.ident;
 	}
-
-
 //----------------------------------------------------------------------------//
 
 };
