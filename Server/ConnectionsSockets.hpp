@@ -1,10 +1,24 @@
 #ifndef FT_WEBSERVER_CONNECTIONSSOCKETS_HPP
 #define FT_WEBSERVER_CONNECTIONSSOCKETS_HPP
 
-#include "ConnectionsBase.hpp"
+#include <map>
+#include <vector>
+#include "../Client/SocketBase.hpp"
 
-class ConnectionsSockets : public ConnectionsBase {
 
+class ConnectionsSockets {
+public:
+	ConnectionsSockets();
+	virtual ~ConnectionsSockets();
+
+	void bindSockets();
+	void acceptConnections();
+	void deleteConnections();
+	void unbindPorts();
+
+private:
+	std::map<struct kevent, SocketBase>	_connections;
+	std::vector<struct kevent>			_all_events;
 };
 
 

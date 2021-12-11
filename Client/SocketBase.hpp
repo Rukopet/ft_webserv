@@ -7,11 +7,13 @@
 class SocketBase {
 public:
 	SocketBase(
-			const std::string &ip_address,
-			bool isMainSocket) {
+			const	std::string &ip_address,
+			bool	isMainSocket,
+			int		port) {
 		this->_ip_address = ip_address;
 		this->current_request.dropRequest();
 		this->_isMainSocket = isMainSocket;
+		this->_port = port;
 	};
 
 	Request		current_request;
@@ -31,6 +33,7 @@ public:
 protected:
 	std::string		_ip_address;
 	int				_fd;
+	int				_port;
 	bool 			_isMainSocket;
 };
 

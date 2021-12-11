@@ -1,3 +1,3 @@
 #include "SocketMain.hpp"
 
-SocketMain::SocketMain() : SocketBase("0.0.0.0", true) {}
+SocketMain::SocketMain(int port) : SocketBase("0.0.0.0", true, port) {}

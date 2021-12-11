@@ -6,7 +6,7 @@
 
 class SocketMain : public SocketBase {
 public:
-	SocketMain();
+	SocketMain(int port);
 };
 
 
