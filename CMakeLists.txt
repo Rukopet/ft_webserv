@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.19)
 project(ft_webserver)
 
-set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+set(SOURCE_FILES main.cpp other_example_for_tests.cpp Server/Server.cpp Logger/Logger.cpp Logger/Logger.hpp Parser/Parser.cpp Parser/ServerConfig.cpp Parser/Config.cpp Parser/RouteConfig.cpp Client/Client.cpp Client/Client.hpp Client/Request.cpp Client/Request.hpp Client/IClient.hpp Client/IRequest.hpp Client/Request.cpp Client/Request.hpp)
 
 # this executable for simple RUN, and DEBUG
-add_executable(ft_webserver main.cpp other_example_for_tests.cpp Server/Server.cpp Logger/Logger.cpp Logger/Logger.hpp Parser/Parser.cpp Parser/ServerConfig.cpp Parser/Config.cpp Parser/RouteConfig.cpp)
+add_executable(ft_webserver ${SOURCE_FILES})
 
 # this executable for google tests dont need adding main to this. Also u can RUN with coverage
-add_executable(All_tests UnitTests/Example_test.cpp other_example_for_tests.cpp UnitTests/ExeptionTest.cpp)
+add_executable(All_tests UnitTests/RequestTest.cpp ${SOURCE_FILES})
 add_executable(shit main_for_check_nonblock.cpp)
 add_executable(parser parser/Config.cpp parser/Parser.cpp parser/RouteConfig.cpp parser/IParser.hpp parser/ServerConfig.cpp)
 add_executable(test_behavior parser/Config.cpp parser/Parser.cpp parser/RouteConfig.cpp parser/IParser.hpp parser/ServerConfig.cpp)

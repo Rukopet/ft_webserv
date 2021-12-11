@@ -1,0 +1,10 @@
+#ifndef FT_WEBSERVER_ICLIENT_HPP
+#define FT_WEBSERVER_ICLIENT_HPP
+
+
+class IClient {
+
+};
+
+
+#endif //FT_WEBSERVER_ICLIENT_HPP

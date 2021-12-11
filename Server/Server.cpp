@@ -109,6 +109,8 @@ int Server::_core_loop() {
 		Logger::getInstance().add_line("NUMBER OF EVENTS: " + std::to_string(ret));
 		for (int i = 0; i < ret; ++i) {
 			if (main_sockets.count(tmp_event_list[i]) > 0) {
+				Logger::getInstance().add_line("ACCEPT CONNECTION");
+
 				try {
 					int client_socket = _accept_connection(tmp_event_list[i], monitor_events, kq,
 									   client_address_for_sock);
@@ -121,6 +123,8 @@ int Server::_core_loop() {
 			}
 
 			else {
+				Logger::getInstance().add_line("HANDLE CLIENT");
+
 				int client_socket_fd = static_cast<int>(tmp_event_list[i].ident);
 				sockaddr_in sa_client = client_address_for_sock[client_socket_fd];
 				std::string client_ip = Server::_get_ip_address(sa_client);
@@ -134,8 +138,6 @@ int Server::start() {
 	try {
 		_socket_init();
 		std::cout << "Bind sockets successful, server start" << std::endl;
-		//TODO this crutch need removed
-//		_servers_sockets.push_back(_m_socket);
 		_core_loop();
 	}
 	catch (std::exception &e) {
@@ -148,91 +150,38 @@ int Server::start() {
 
 //TODO need replace that crutch for normal config value
 #define MAX_BODY_SIZE 1
+
+
+
 int Server::_client_handler(int sock_client, std::string &ip_client) {
 	static int count_empty_shit = 0;
 	int len_buffer = 1048576 * MAX_BODY_SIZE;
 	char buffer[len_buffer];
 	memset(&buffer, 0, len_buffer);
 
-	int ret = read(sock_client, buffer, len_buffer);
-	if (ret == -1) {
-		throw Server_start_exception("IN CLIENT HANDLER: while read:");
-	}
-	buffer[ret] = '\0';
+//	int ret = read(sock_client, buffer, len_buffer);
+//	if (ret == -1) {
+//		throw Server_start_exception("IN CLIENT HANDLER: while read:");
+//	}
+//	buffer[ret] = '\0';
+//
+//	if (ret != 0) {
+//		std::cout << buffer << std::endl;
+//		std::string log = "\nCLIENT IP: ";
+//		log += ip_client;
+//		log += "\n\n";
+//		log += buffer;
+//		Logger::getInstance().add_line(log);
+//	}
+//	else {
+//		count_empty_shit += 1;
+//	}
+	int amount = 0;
+	amount = recv(sock_client, buffer, len_buffer, 0);
+	std::cout << "1!!" << std::endl;
 
-	if (ret != 0) {
-		std::cout << buffer << std::endl;
-		std::string log = "\nCLIENT IP: ";
-		log += ip_client;
-		log += "\n\n";
-		log += buffer;
-		Logger::getInstance().add_line(log);
-	}
-	else {
-		count_empty_shit += 1;
-	}
-	std::cout << count_empty_shit << std::endl;
-	char *asd = "HTTP/1.1 200 OK\n"
-				"Content-Encoding: gzip\n"
-				"Accept-Ranges: bytes\n"
-				"Age: 523659\n"
-				"Cache-Control: max-age=604800\n"
-				"Content-Type: text/html; charset=UTF-8\n"
-				"Date: Wed, 21 Jul 2021 15:14:19 GMT\n"
-				"Etag: \"3147526947\"\n"
-				"Expires: Wed, 28 Jul 2021 15:14:19 GMT\n"
-				"Last-Modified: Thu, 17 Oct 2019 07:18:26 GMT\n"
-				"Server: ECS (nyb/1D13)\n"
-				"Vary: Accept-Encoding\n"
-				"X-Cache: HIT\n"
-				"Content-Length: 648\n\n""<!doctype html>\n"
-				"<html>\n"
-				"<head>\n"
-				"    <title>Example Domain</title>\n"
-				"\n"
-				"    <meta charset=\"utf-8\" />\n"
-				"    <meta http-equiv=\"Content-type\" content=\"text/html; charset=utf-8\" />\n"
-				"    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n"
-				"    <style type=\"text/css\">\n"
-				"    body {\n"
-				"        background-color: #f0f0f2;\n"
-				"        margin: 0;\n"
-				"        padding: 0;\n"
-				"        font-family: -apple-system, system-ui, BlinkMacSystemFont, \"Segoe UI\", \"Open Sans\", \"Helvetica Neue\", Helvetica, Arial, sans-serif;\n"
-				"        \n"
-				"    }\n"
-				"    div {\n"
-				"        width: 600px;\n"
-				"        margin: 5em auto;\n"
-				"        padding: 2em;\n"
-				"        background-color: #fdfdff;\n"
-				"        border-radius: 0.5em;\n"
-				"        box-shadow: 2px 3px 7px 2px rgba(0,0,0,0.02);\n"
-				"    }\n"
-				"    a:link, a:visited {\n"
-				"        color: #38488f;\n"
-				"        text-decoration: none;\n"
-				"    }\n"
-				"    @media (max-width: 700px) {\n"
-				"        div {\n"
-				"            margin: 0 auto;\n"
-				"            width: auto;\n"
-				"        }\n"
-				"    }\n"
-				"    </style>    \n"
-				"</head>\n"
-				"\n"
-				"<body>\n"
-				"<div>\n"
-				"    <h1>Example Domain</h1>\n"
-				"    <p>This domain is for use in illustrative examples in documents. You may use this\n"
-				"    domain in literature without prior coordination or asking for permission.</p>\n"
-				"    <p><a href=\"https://www.iana.org/domains/example\">More information...</a></p>\n"
-				"</div>\n"
-				"</body>\n"
-				"</html>\n\n";
-	std::cout << asd << std::endl;
-	recv(sock_client, (void*)asd, strlen(asd), 0);
+	std::cout << buffer << std::endl;
+	std::cout << "1!!" << std::endl;
 	return count_empty_shit;
 }
 

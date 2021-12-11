@@ -35,6 +35,7 @@ public:
 private:
 	int _socket_init();
 	int _client_handler(int sock_client, std::string &ip_client);
+
 	int _core_loop();
 
 	static int _accept_connection(const struct kevent &incoming_connection,
