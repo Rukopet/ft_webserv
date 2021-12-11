@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <netinet/in.h>
 #include "../Client/Request.hpp"
-#include "../Client/Client.hpp"
+#include "../Client/SocketClient.hpp"
 #include "../Server/Server.hpp"
 
 class ClientRequestFixture : public ::testing::Test {
@@ -53,14 +53,14 @@ protected:
 //		[6] = {char} 0 '\0'
 //		[7] = {char} 0 '\0'
 
-		testClient = new Client(event, "127.0.0.1");
+		testClient = new SocketClient(event, "127.0.0.1");
 		testRequest = new Request;
 		equality = new std::string("Check drop method");
 		equality2 = new std::string("Another text");
 	}
 	struct kevent	*event;
 	sockaddr_in		*sa_client;
-	Client	*testClient;
+	SocketClient	*testClient;
 	Request *testRequest;
 	std::string *equality;
 	std::string *equality2;

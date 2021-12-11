@@ -2,7 +2,7 @@
 #define FT_WEBSERVER_CONNECTIONSBASE_HPP
 
 #include <map>
-#include "../Client/Client.hpp"
+#include "../Client/SocketClient.hpp"
 
 class ConnectionsBase {
 public:
@@ -10,7 +10,7 @@ public:
 
 
 private:
-	std::map<struct kevent, Client>	_connections;
+	std::map<struct kevent, SocketClient>	_connections;
 };
 
 

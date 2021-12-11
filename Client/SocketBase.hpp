@@ -1,14 +1,14 @@
-#ifndef FT_WEBSERVER_CLIENTBASE_HPP
-#define FT_WEBSERVER_CLIENTBASE_HPP
+#ifndef FT_WEBSERVER_SOCKETBASE_HPP
+#define FT_WEBSERVER_SOCKETBASE_HPP
 
 #include <sys/event.h>
 #include "Request.hpp"
 
-class ClientBase {
+class SocketBase {
 public:
-	ClientBase(
+	SocketBase(
 			const std::string &ip_address,
-			bool isMainSocket = false) {
+			bool isMainSocket) {
 		this->_ip_address = ip_address;
 		this->current_request.dropRequest();
 		this->_isMainSocket = isMainSocket;
@@ -35,4 +35,4 @@ protected:
 };
 
 
-#endif //FT_WEBSERVER_CLIENTBASE_HPP
+#endif //FT_WEBSERVER_SOCKETBASE_HPP

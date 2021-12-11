@@ -3,8 +3,8 @@ project(ft_webserver)
 
 set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
-set(SOURCE_FILES main.cpp other_example_for_tests.cpp Server/Server.cpp Logger/Logger.cpp Logger/Logger.hpp Parser/Parser.cpp Parser/ServerConfig.cpp Parser/Config.cpp Parser/RouteConfig.cpp Client/Client.cpp Client/Client.hpp Client/Request.cpp Client/Request.hpp Client/ClientBase.hpp Client/RequestBase.hpp Client/Request.cpp Client/Request.hpp Server/ServerUtils.cpp Server/ServerUtils.hpp Server/ConnectionsClients.cpp Server/ConnectionsClients.hpp Server/ConnectionsBase.hpp Server/ConnectionsMainSockets.cpp Server/ConnectionsMainSockets.hpp)
-set(SOURCES_FOR_TEST Client/Request.cpp Client/Client.cpp Server/ServerUtils.cpp Server/ServerUtils.hpp)
+set(SOURCE_FILES main.cpp other_example_for_tests.cpp Server/Server.cpp Logger/Logger.cpp Logger/Logger.hpp Parser/Parser.cpp Parser/ServerConfig.cpp Parser/Config.cpp Parser/RouteConfig.cpp Client/SocketClient.cpp Client/SocketClient.hpp Client/Request.cpp Client/Request.hpp Client/SocketBase.hpp Client/RequestBase.hpp Client/Request.cpp Client/Request.hpp Server/ServerUtils.cpp Server/ServerUtils.hpp Server/ConnectionsClients.cpp Server/ConnectionsClients.hpp Server/ConnectionsBase.hpp Server/ConnectionsMainSockets.cpp Server/ConnectionsMainSockets.hpp)
+set(SOURCES_FOR_TEST Client/Request.cpp Client/SocketClient.cpp Server/ServerUtils.cpp Server/ServerUtils.hpp)
 set(TESTS_SOURCE UnitTests/ClientRequestFixture.cpp Server/ServerUtils.cpp Server/ServerUtils.hpp)
 
 # this executable for simple RUN, and DEBUG
