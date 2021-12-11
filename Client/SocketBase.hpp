@@ -7,16 +7,20 @@
 class SocketBase {
 public:
 	SocketBase(
+			int		fd,
 			const	std::string &ip_address,
 			bool	isMainSocket,
-			int		port) {
+			int		port
+			) {
+
 		this->_ip_address = ip_address;
 		this->current_request.dropRequest();
 		this->_isMainSocket = isMainSocket;
 		this->_port = port;
+		this->setFd(fd);
+
 	};
 
-	Request		current_request;
 
 	const std::string &getIpAddress() const {
 		return _ip_address;
@@ -29,6 +33,11 @@ public:
 	void setFd(int fd) {
 		_fd = fd;
 	}
+
+	void setNonBlockFile();
+
+public:
+	Request		current_request;
 
 protected:
 	std::string		_ip_address;

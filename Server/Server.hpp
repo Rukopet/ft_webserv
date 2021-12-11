@@ -23,6 +23,7 @@
 #include "../parser/Config.hpp"
 #include "../Logger/Logger.hpp"
 #include "ServerUtils.hpp"
+#include "ConnectionsSockets.hpp"
 
 struct SetCompare;
 
@@ -37,6 +38,8 @@ private:
 	int _socket_init();
 	int _client_handler(int sock_client, std::string &ip_client);
 	int _core_loop();
+
+	ConnectionsSockets connections;
 	static int _accept_connection(const struct kevent &incoming_connection,
 								  std::vector<struct kevent> &monitor_events,
 								  int kq_fd,
@@ -52,6 +55,7 @@ private:
 private:
 	std::vector<int> _servers_sockets;
 	Config &_conf;
+
 
 };
 

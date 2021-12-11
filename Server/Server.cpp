@@ -173,31 +173,35 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 int Server::_socket_init() {
 	const std::set<int> &ports = _conf.getPorts();
 	for (std::set<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
-		int m_socket = 0;
 		int port = *it;
 
-		m_socket = socket(PF_INET, SOCK_STREAM, 0);
-		if (m_socket == -1) {
+		try {
+			this->connections.bindSocket(port);
+		}
+		catch (std::exception &e) {
 			throw Server_start_exception("IN SOCKET INIT: in socket:");
 		}
 
-		sockaddr_in sa_server;
-		memset(&sa_server, 0, sizeof(sa_server));
-		sa_server.sin_addr.s_addr = INADDR_ANY;
-		sa_server.sin_family = AF_INET;
-		sa_server.sin_port = htons(port);
 
 
-		// https://www.opennet.ru/docs/RUS/socket/node3.html
-		// explain how and why cast sockaddr_in to sockaddr
-		if (bind(m_socket, (sockaddr*)&sa_server, sizeof(sa_server)) != 0) {
-			throw Server_start_exception("IN SOCKET INIT: in bind func:");
-		}
 
-		if (listen(m_socket, MAX_CLIENTS) != 0) {
-			throw Server_start_exception("IN SOCKET INIT: in listen func:");
-		}
-		_servers_sockets.push_back(m_socket);
+//		sockaddr_in sa_server;
+//		memset(&sa_server, 0, sizeof(sa_server));
+//		sa_server.sin_addr.s_addr = INADDR_ANY;
+//		sa_server.sin_family = AF_INET;
+//		sa_server.sin_port = htons(port);
+//
+//
+//		// https://www.opennet.ru/docs/RUS/socket/node3.html
+//		// explain how and why cast sockaddr_in to sockaddr
+//		if (bind(m_socket, (sockaddr*)&sa_server, sizeof(sa_server)) != 0) {
+//			throw Server_start_exception("IN SOCKET INIT: in bind func:");
+//		}
+//
+//		if (listen(m_socket, MAX_CLIENTS) != 0) {
+//			throw Server_start_exception("IN SOCKET INIT: in listen func:");
+//		}
+//		_servers_sockets.push_back(m_socket);
 	}
 		return 0;
 }

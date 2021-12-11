@@ -11,7 +11,7 @@ public:
 	ConnectionsSockets();
 	virtual ~ConnectionsSockets();
 
-	void bindSockets();
+	void bindSocket(int port);
 	void acceptConnections();
 	void deleteConnections();
 	void unbindPorts();
