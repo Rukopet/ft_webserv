@@ -8,7 +8,7 @@
 class SocketClient : public SocketBase {
 public:
 
-	SocketClient(const std::string &ipAddress, bool isMainSocket);
+	SocketClient(const std::string &ipAddress);
 
 	virtual ~SocketClient();
 };
