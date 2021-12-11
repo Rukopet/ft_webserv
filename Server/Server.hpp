@@ -22,6 +22,7 @@
 #include <map>
 #include "../parser/Config.hpp"
 #include "../Logger/Logger.hpp"
+#include "ServerUtils.hpp"
 
 struct SetCompare;
 
@@ -35,9 +36,7 @@ public:
 private:
 	int _socket_init();
 	int _client_handler(int sock_client, std::string &ip_client);
-
 	int _core_loop();
-
 	static int _accept_connection(const struct kevent &incoming_connection,
 								  std::vector<struct kevent> &monitor_events,
 								  int kq_fd,
@@ -46,17 +45,9 @@ private:
 	static int _queue_fd_add(int new_fd,
 							 std::vector<struct kevent> &monitor_events,
 							 int kq_fd);
-
 	int	_queue_fd_remove();
 	int _queue_init_set_and_vectors_for_core(
 			std::set<struct kevent, SetCompare> &main_sockets, std::vector<struct kevent> &monitor_events);
-
-// for string ip address, need replace on some good shit
-//----------------------------------------------------------------------------//
-	static std::string	_get_ip_address(const sockaddr_in &clientData);
-	static void* 		_get_address(sockaddr *sa);
-//----------------------------------------------------------------------------//
-
 
 private:
 	std::vector<int> _servers_sockets;

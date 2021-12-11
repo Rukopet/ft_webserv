@@ -29,6 +29,7 @@ protected:
 //		data = {intptr_t} 711
 //		udata = {void * | 0x0} NULL
 
+
 		sa_client = new (sockaddr_in) {
 			.sin_len = 16,
 			.sin_family = 2,
@@ -83,5 +84,5 @@ TEST_F(ClientRequestFixture, CheckOperatorsWithCharString) {
 
 
 TEST_F(ClientRequestFixture, TestGetIpAddressFromSaClient) {
-	ASSERT_TRUE(Server::_get_ip_address(sa_client) == "127.0.0.1");
+	ASSERT_TRUE(ServerUtils::_get_ip_address(*sa_client) == "127.0.0.1");
 }

@@ -1,21 +1,5 @@
 #include "Server.hpp"
 
-//----------------------------------------------------------------------------//
-			//for get clients ip addresses
-void *Server::_get_address(sockaddr *sa) {
-	if (sa->sa_family == AF_INET)
-		return &(((sockaddr_in*)sa)->sin_addr);
-	return &(((sockaddr_in6*)sa)->sin6_addr);
-}
-
-std::string Server::_get_ip_address(const sockaddr_in &clientData) {
-	char ip[INET6_ADDRSTRLEN];
-	memset(&ip, 0, INET6_ADDRSTRLEN);
-	inet_ntop(clientData.sin_family, _get_address((sockaddr*)&clientData), ip,
-			  sizeof(ip));
-	return std::string(ip);
-}
-//----------------------------------------------------------------------------//
 
 Server::Server(Config &conf) : _conf(conf) {}
 
@@ -127,7 +111,7 @@ int Server::_core_loop() {
 
 				int client_socket_fd = static_cast<int>(tmp_event_list[i].ident);
 				sockaddr_in sa_client = client_address_for_sock[client_socket_fd];
-				std::string client_ip = Server::_get_ip_address(sa_client);
+				std::string client_ip = ServerUtils::_get_ip_address(sa_client);
 				_client_handler(client_socket_fd, client_ip);
 			}
 		}
