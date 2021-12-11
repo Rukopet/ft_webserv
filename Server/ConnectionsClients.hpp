@@ -3,7 +3,7 @@
 
 #include "ConnectionsBase.hpp"
 
-class ConnectionsClients : public ConnectionsBase{
+class ConnectionsClients : public ConnectionsBase {
 
 };
 

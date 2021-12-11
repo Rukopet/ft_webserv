@@ -6,10 +6,12 @@
 
 class ClientBase {
 public:
-	ClientBase(struct kevent *event, const std::string &ip_address) {
-		this->_event = event;
+	ClientBase(
+			const std::string &ip_address,
+			bool isMainSocket = false) {
 		this->_ip_address = ip_address;
 		this->current_request.dropRequest();
+		this->_isMainSocket = isMainSocket;
 	};
 
 	Request		current_request;
@@ -18,13 +20,18 @@ public:
 		return _ip_address;
 	}
 
-	struct kevent *getEvent() const {
-		return _event;
+	int getFd() const {
+		return _fd;
+	}
+
+	void setFd(int fd) {
+		_fd = fd;
 	}
 
 protected:
-	std::string _ip_address;
-	struct kevent *_event;
+	std::string		_ip_address;
+	int				_fd;
+	bool 			_isMainSocket;
 };
 
 
