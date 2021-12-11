@@ -78,10 +78,10 @@ struct Server_start_exception : public std::exception {
 	Server_start_exception() throw() {
 		error = std::strerror(errno);
 	};
-	virtual const char *what() const throw() {
+	virtual ~Server_start_exception() throw() {};
+	virtual const char* what() const throw() {
 		return error.c_str();
 	};
-
 };
 //----------------------------------------------------------------------------//
 

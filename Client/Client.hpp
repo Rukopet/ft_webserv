@@ -7,7 +7,8 @@
 
 class Client : public ClientBase {
 public:
-	Client();
+	Client(struct kevent *event, const std::string &ipAddress);
+
 	virtual ~Client();
 };
 

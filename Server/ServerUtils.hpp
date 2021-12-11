@@ -1,0 +1,10 @@
+#ifndef FT_WEBSERVER_SERVERUTILS_HPP
+#define FT_WEBSERVER_SERVERUTILS_HPP
+
+
+class ServerUtils {
+
+};
+
+
+#endif //FT_WEBSERVER_SERVERUTILS_HPP
