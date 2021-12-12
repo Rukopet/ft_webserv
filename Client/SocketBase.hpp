@@ -19,7 +19,6 @@ public:
 		this->_isMainSocket = isMainSocket;
 		this->_port = port;
 		this->_fd = fd;
-
 	};
 
 

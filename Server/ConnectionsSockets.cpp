@@ -1,6 +1,4 @@
 #include "ConnectionsSockets.hpp"
-#include "Server.hpp"
-#include "../Client/SocketMain.hpp"
 
 ConnectionsSockets::ConnectionsSockets() {}
 
@@ -42,4 +40,23 @@ void ConnectionsSockets::bindSocket(int port) {
 	this->_connections.insert(this->_connections.begin(),
 			std::pair<struct kevent, SocketBase>(
 					*tmp_event, socket));
+	this->_all_events.push_back(*tmp_event);
+}
+
+
+void ConnectionsSockets::acceptConnection(const struct kevent &current_event) {
+	sockaddr_in sa_client;
+	socklen_t client_len = sizeof(sa_client);
+
+	int client_socket = accept(static_cast<int>(current_event.ident), (sockaddr *) &sa_client,
+							   &client_len);
+	if (client_socket == -1)
+		throw Server_start_exception("In acceptConnection method:");
+	std::string client_ip = ServerUtils::_get_ip_address(sa_client);
+	SocketClient socket(client_ip, client_socket);
+	try {
+
+	}
+
+
 }
