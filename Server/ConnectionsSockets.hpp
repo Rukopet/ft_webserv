@@ -24,7 +24,7 @@ public:
 
 	void bindSocket(int port);
 	void acceptConnection(const struct kevent &current_event);
-	void deleteConnection();
+	void deleteConnection(const struct kevent &current_event);
 	void unbindPorts();
 
 private:

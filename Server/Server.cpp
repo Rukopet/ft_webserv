@@ -38,24 +38,24 @@ int Server::_queue_fd_add(int new_fd, std::vector<struct kevent> &monitor_events
 	return 0;
 }
 
-int Server::_accept_connection(const struct kevent &incoming_connection,
-							   std::vector<struct kevent> &monitor_events,
-							   int kq_fd, std::map<int, sockaddr_in> &clients) {
-	sockaddr_in sa_client;
-	socklen_t client_len = sizeof(sa_client);
-	int client_socket = accept(static_cast<int>(incoming_connection.ident), (sockaddr *) &sa_client,
-							   &client_len);
-	if (client_socket == -1) {
-		throw Server_start_exception("In _accept_connection, ACCEPT:");
-	}
-	if (fcntl(client_socket, F_SETFL, O_NONBLOCK) == -1) {
-		throw Server_start_exception("In _accept_connection, FCNTL:");
-	}
-	clients[client_socket] = sa_client;
-//	TODO need some fixes with del new or replace it on stack values
-	monitor_events.resize(monitor_events.size() + 1);
-	return client_socket;
-}
+//int Server::_accept_connection(const struct kevent &incoming_connection,
+//							   std::vector<struct kevent> &monitor_events,
+//							   int kq_fd, std::map<int, sockaddr_in> &clients) {
+//	sockaddr_in sa_client;
+//	socklen_t client_len = sizeof(sa_client);
+//	int client_socket = accept(static_cast<int>(incoming_connection.ident), (sockaddr *) &sa_client,
+//							   &client_len);
+//	if (client_socket == -1) {
+//		throw Server_start_exception("In _accept_connection, ACCEPT:");
+//	}
+//	if (fcntl(client_socket, F_SETFL, O_NONBLOCK) == -1) {
+//		throw Server_start_exception("In _accept_connection, FCNTL:");
+//	}
+//	clients[client_socket] = sa_client;
+////	TODO need some fixes with del new or replace it on stack values
+//	monitor_events.resize(monitor_events.size() + 1);
+//	return client_socket;
+//}
 
 int Server::_core_loop() {
 
@@ -176,7 +176,7 @@ int Server::_socket_init() {
 		int port = *it;
 
 		try {
-			this->connections.bindSocket(port);
+			this->_connections.bindSocket(port);
 		}
 		catch (std::exception &e) {
 			throw Server_start_exception("IN SOCKET INIT: in socket:");

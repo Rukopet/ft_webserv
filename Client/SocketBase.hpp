@@ -41,8 +41,8 @@ public:
 protected:
 	std::string		_ip_address;
 	int				_fd;
-	int				_port;
 	bool 			_isMainSocket;
+	int				_port;
 };
 
 

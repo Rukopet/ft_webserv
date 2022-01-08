@@ -54,9 +54,40 @@ void ConnectionsSockets::acceptConnection(const struct kevent &current_event) {
 		throw Server_start_exception("In acceptConnection method:");
 	std::string client_ip = ServerUtils::_get_ip_address(sa_client);
 	SocketClient socket(client_ip, client_socket);
-	try {
 
+	try {
+		socket.setNonBlock();
+	}
+	catch (std::exception &e) {
+		throw Server_start_exception("In setting nonblock fd part\n" + std::string(e.what()));
+	}
+	this->_all_events.resize(this->_all_events.size() + 1);
+	this->_all_events.push_back(current_event);
+	this->_connections.insert(std::pair<struct kevent, SocketBase>(current_event, socket));
+}
+
+
+void ConnectionsSockets::deleteConnection(const struct kevent &current_event) {
+	std::vector<struct kevent>::iterator search_result_vector;
+	try {
+		search_result_vector = std::find(this->_all_events.begin(), this->_all_events.end(), current_event);
+	}
+	catch (std::exception &e) {
+		throw e;
 	}
 
+	if (search_result_vector == this->_all_events.end()) {
+		throw Server_start_exception("Not found kevent in deleteConnection");
+	}
+	this->_all_events.erase(search_result_vector);
 
+	std::map<struct kevent, SocketBase, MapCompare>::iterator search_result_map;
+	try {
+		search_result_map = this->_connections.find(current_event);
+	}
+	catch (std::exception &e) {
+		throw e;
+	}
+
+	this->_connections.erase(search_result_map);
 }

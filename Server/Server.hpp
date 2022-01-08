@@ -39,7 +39,7 @@ private:
 	int _client_handler(int sock_client, std::string &ip_client);
 	int _core_loop();
 
-	ConnectionsSockets connections;
+	ConnectionsSockets _connections;
 	static int _accept_connection(const struct kevent &incoming_connection,
 								  std::vector<struct kevent> &monitor_events,
 								  int kq_fd,
