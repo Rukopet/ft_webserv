@@ -62,50 +62,30 @@ int Server::_core_loop() {
 	//TODO need read some shit about asynchronous, synchronous, nonsynchronous methods accepts
 	//TODO need understand where need add fcntl call for nonblock fd
 
-	std::set<struct kevent, SetCompare> main_sockets;
-	std::vector<struct kevent> monitor_events;
-	std::map<int, sockaddr_in> client_address_for_sock;
 
-	int kq = kqueue();
-
-	if (_queue_init_set_and_vectors_for_core(main_sockets, monitor_events) == -1)
-		throw Server_start_exception("In _core_loop, when events being initializing:");
-
-
-
-
+	int kq = _connections.getKq();
 	int ret = 0;
 
 	// for not NULL pointer value in tmp_event_list
-	struct kevent *tmp_event_list = &monitor_events[0];
-
 	while (true) {
+		const std::vector<struct kevent> &monitor_events = _connections.getEvents();
 		ret = kevent(kq, monitor_events.data(), static_cast<int>(monitor_events.size()), NULL, 0, NULL);
 		if (ret == -1) {
 			throw Server_start_exception("In _core_loop, KEVENT before loop:");
 		}
 
-		ret = kevent(kq, NULL, 0, tmp_event_list, 1, NULL);
+		ret = kevent(kq, NULL, 0, monitor_events.data(), static_cast<int>(monitor_events.size(), NULL);
 		if (ret == -1) {
 			throw Server_start_exception();
 		}
 
 		Logger::getInstance().add_line("NUMBER OF EVENTS: " + std::to_string(ret));
 		for (int i = 0; i < ret; ++i) {
-			if (main_sockets.count(tmp_event_list[i]) > 0) {
+			const struct kevent &current_event = monitor_events[i];
+			if (_connections.isMainSocket(current_event)) {
 				Logger::getInstance().add_line("ACCEPT CONNECTION");
-
-				try {
-					int client_socket = _accept_connection(tmp_event_list[i], monitor_events, kq,
-									   client_address_for_sock);
-					_queue_fd_add(client_socket, monitor_events, kq);
-				}
-				catch (std::exception &e) {
-					std::cerr << e.what() << std::endl;
-					continue;
-				}
+				_connections.acceptConnection(current_event);
 			}
-
 			else {
 				Logger::getInstance().add_line("HANDLE CLIENT");
 

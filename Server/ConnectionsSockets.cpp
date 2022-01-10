@@ -1,6 +1,6 @@
 #include "ConnectionsSockets.hpp"
 
-ConnectionsSockets::ConnectionsSockets() {}
+ConnectionsSockets::ConnectionsSockets() : _kq(kqueue()) {}
 
 ConnectionsSockets::~ConnectionsSockets() {
 }
@@ -90,4 +90,20 @@ void ConnectionsSockets::deleteConnection(const struct kevent &current_event) {
 	}
 
 	this->_connections.erase(search_result_map);
+	close(search_result_map->second.getFd());
+}
+
+int ConnectionsSockets::getKq() const {
+	return _kq;
+}
+
+const std::vector<struct kevent> &ConnectionsSockets::getEvents() const {
+	return _all_events;
+}
+
+bool ConnectionsSockets::isMainSocket(const struct kevent &current_event) {
+
+	std::map<struct kevent, SocketBase, MapCompare>::iterator search_result_map;
+	search_result_map = this->_connections.find(current_event);
+	return search_result_map->second.isIsMainSocket();
 }

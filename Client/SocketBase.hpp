@@ -35,6 +35,10 @@ public:
 			throw Server_start_exception("IN SOCKET INIT: in fcntl func:");
 	};
 
+	bool isIsMainSocket() const {
+		return _isMainSocket;
+	}
+
 public:
 	Request		current_request;
 

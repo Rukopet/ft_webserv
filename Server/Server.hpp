@@ -55,8 +55,6 @@ private:
 private:
 	std::vector<int> _servers_sockets;
 	Config &_conf;
-
-
 };
 
 
