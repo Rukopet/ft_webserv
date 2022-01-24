@@ -8,8 +8,11 @@
 #include "../Client/SocketMain.hpp"
 
 
+
 //TODO delete this hardcode
 #define MAX_CLIENTS 1000
+
+class SocketBase;
 
 
 struct MapCompare {
@@ -18,8 +21,6 @@ struct MapCompare {
 	};
 };
 
-
-class SocketBase;
 
 class ConnectionsSockets {
 public:
