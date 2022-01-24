@@ -5,12 +5,8 @@
 #include <sys/socket.h>
 
 
-
 #include "SocketBase.hpp"
 #include "../Logger/Logger.hpp"
-
-
-
 
 class SocketClient : public SocketBase {
 public:

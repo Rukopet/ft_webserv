@@ -20,8 +20,18 @@ void SocketClient::handleConnection() {
 
 	std::cout << buffer << std::endl;
 	std::string log = "\nCLIENT IP: ";
-	log += this->_ip_address;
+	log += this->getIpAddress();
 	log += "\n\n";
 	log += buffer;
 	Logger::getInstance().add_line(log);
+
+	std::string msg = "Count bytes received: ";
+	msg += std::to_string(ret);
+	ret = send(this->getFd(), msg.c_str(), msg.size(), 0);
+	log = "message to ";
+	log += this->getIpAddress();
+	log += "with length ";
+	log += std::to_string(ret);
+	log += "\n\n";
+	log += msg;
 }

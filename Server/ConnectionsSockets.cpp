@@ -1,7 +1,8 @@
 #include "ConnectionsSockets.hpp"
 
 bool operator==(const struct kevent &a, const struct kevent &b) {
-	return a.ident == b.ident && a.data == b.data;
+	return a.ident == b.ident &&
+	a.data == b.data;
 }
 
 
@@ -37,16 +38,17 @@ void ConnectionsSockets::bindSocket(int port) {
 
 
 
-	this->_all_events.resize(this->_all_events.size() + 1);
-	struct kevent *tmp_event = &this->_all_events.back();
-	EV_SET(tmp_event, m_socket, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, NOTE_WRITE, 0, NULL);
+//	this->_all_events.resize(this->_all_events.size() + 1);
+	struct kevent tmp_event;
+	EV_SET(&tmp_event, m_socket, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, NOTE_WRITE, 0, NULL);
 
 	SocketMain	socket(port, m_socket);
 	socket.setNonBlock();
 
 	this->_connections.insert(this->_connections.begin(),
 			std::pair<struct kevent, SocketBase>(
-					*tmp_event, socket));
+					tmp_event, socket));
+	this->_all_events.push_back(tmp_event);
 }
 
 
@@ -68,7 +70,8 @@ void ConnectionsSockets::acceptConnection(const struct kevent &current_event) {
 		throw Server_start_exception("In setting nonblock fd part\n" + std::string(e.what()));
 	}
 	this->_all_events.push_back(current_event);
-	this->_connections.insert(std::pair<struct kevent, SocketBase>(current_event, socket));
+	auto add = std::pair<struct kevent, SocketBase>(current_event, socket);
+	this->_connections.insert(add);
 }
 
 
