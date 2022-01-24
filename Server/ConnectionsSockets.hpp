@@ -6,7 +6,11 @@
 #include "../Client/SocketBase.hpp"
 #include "../Client/SocketClient.hpp"
 #include "../Client/SocketMain.hpp"
-#include "Server.hpp"
+
+
+//TODO delete this hardcode
+#define MAX_CLIENTS 1000
+
 
 struct MapCompare {
 	bool operator()(const struct kevent &a, const struct kevent &b) const {

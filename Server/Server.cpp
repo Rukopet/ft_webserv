@@ -3,31 +3,31 @@
 
 Server::Server(Config &conf) : _conf(conf) {}
 
-int Server::_queue_init_set_and_vectors_for_core(
-		std::set<struct kevent, SetCompare> &main_sockets,
-		std::vector<struct kevent> &monitor_events) {
-
-//	_servers_sockets.push_back(open("123", O_RDONLY));
-	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
-		monitor_events.resize(monitor_events.size() +  1);
-
-
-		//TODO replace this block to the sock init
-		// non checked flags on events
-		if (fcntl(*it, F_SETFL, O_NONBLOCK) == -1)
-			return -1;
-		struct kevent *tmp = &monitor_events.back();
-
-		//TODO be care with EV_EOF flag
-		EV_SET(tmp, *it, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, NOTE_WRITE, 0,	NULL);
-		main_sockets.insert(*tmp);
-	}
-	return 0;
-}
-
-int Server::_queue_fd_add(int new_fd, std::vector<struct kevent> &monitor_events,
-						  int kq_fd) {
-	EV_SET(&monitor_events.back(), new_fd, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
+//int Server::_queue_init_set_and_vectors_for_core(
+//		std::set<struct kevent, SetCompare> &main_sockets,
+//		std::vector<struct kevent> &monitor_events) {
+//
+////	_servers_sockets.push_back(open("123", O_RDONLY));
+//	for (std::vector<int>::iterator it = _servers_sockets.begin(); it != _servers_sockets.end(); ++it) {
+//		monitor_events.resize(monitor_events.size() +  1);
+//
+//
+//		//TODO replace this block to the sock init
+//		// non checked flags on events
+//		if (fcntl(*it, F_SETFL, O_NONBLOCK) == -1)
+//			return -1;
+//		struct kevent *tmp = &monitor_events.back();
+//
+//		//TODO be care with EV_EOF flag
+//		EV_SET(tmp, *it, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, NOTE_WRITE, 0,	NULL);
+//		main_sockets.insert(*tmp);
+//	}
+//	return 0;
+//}
+//
+//int Server::_queue_fd_add(int new_fd, std::vector<struct kevent> &monitor_events,
+//						  int kq_fd) {
+//	EV_SET(&monitor_events.back(), new_fd, EVFILT_READ, EV_ADD | EV_ENABLE, NOTE_WRITE, 0,	NULL);
 
 //	EV_SET(monitor_events.back(), new_fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0,	NULL);
 
@@ -35,8 +35,8 @@ int Server::_queue_fd_add(int new_fd, std::vector<struct kevent> &monitor_events
 //	ret = kevent(kq_fd, *(monitor_events.data()), static_cast<int>(monitor_events.size()), NULL, 0, NULL);
 //	if (ret == -1)
 //		throw Server_start_exception("In _queue_fd_add:");
-	return 0;
-}
+//	return 0;
+//}
 
 //int Server::_accept_connection(const struct kevent &incoming_connection,
 //							   std::vector<struct kevent> &monitor_events,
@@ -74,7 +74,9 @@ int Server::_core_loop() {
 			throw Server_start_exception("In _core_loop, KEVENT before loop:");
 		}
 
-		ret = kevent(kq, NULL, 0, monitor_events.data(), static_cast<int>(monitor_events.size()), NULL);
+		ret = kevent(kq, NULL, 0, const_cast<struct kevent *>(monitor_events.data()),
+				static_cast<int>(monitor_events.size()), NULL);
+
 		if (ret == -1) {
 			throw Server_start_exception();
 		}
@@ -118,12 +120,12 @@ int Server::start() {
 
 
 
-int Server::_client_handler(int sock_client, std::string &ip_client) {
-	static int count_empty_shit = 0;
-	int len_buffer = 1048576 * MAX_BODY_SIZE;
-	char buffer[len_buffer];
-	memset(&buffer, 0, len_buffer);
-
+//int Server::_client_handler(int sock_client, std::string &ip_client) {
+//	static int count_empty_shit = 0;
+//	int len_buffer = 1048576 * MAX_BODY_SIZE;
+//	char buffer[len_buffer];
+//	memset(&buffer, 0, len_buffer);
+//
 //	int ret = read(sock_client, buffer, len_buffer);
 //	if (ret == -1) {
 //		throw Server_start_exception("IN CLIENT HANDLER: while read:");
@@ -141,16 +143,17 @@ int Server::_client_handler(int sock_client, std::string &ip_client) {
 //	else {
 //		count_empty_shit += 1;
 //	}
-	int amount = 0;
-	amount = recv(sock_client, buffer, len_buffer, 0);
-	std::cout << "1!!" << std::endl;
-
-	std::cout << buffer << std::endl;
-	std::cout << "1!!" << std::endl;
-	return count_empty_shit;
-}
+//	int amount = 0;
+//	amount = recv(sock_client, buffer, len_buffer, 0);
+//	std::cout << "1!!" << std::endl;
+//
+//	std::cout << buffer << std::endl;
+//	std::cout << "1!!" << std::endl;
+//	return count_empty_shit;
+//}
 
 //TODO need adding port for that, dont know how handle it, i think this after parsing config
+
 int Server::_socket_init() {
 	const std::set<int> &ports = _conf.getPorts();
 	for (std::set<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
@@ -162,27 +165,6 @@ int Server::_socket_init() {
 		catch (std::exception &e) {
 			throw Server_start_exception("IN SOCKET INIT: in socket:");
 		}
-
-
-
-
-//		sockaddr_in sa_server;
-//		memset(&sa_server, 0, sizeof(sa_server));
-//		sa_server.sin_addr.s_addr = INADDR_ANY;
-//		sa_server.sin_family = AF_INET;
-//		sa_server.sin_port = htons(port);
-//
-//
-//		// https://www.opennet.ru/docs/RUS/socket/node3.html
-//		// explain how and why cast sockaddr_in to sockaddr
-//		if (bind(m_socket, (sockaddr*)&sa_server, sizeof(sa_server)) != 0) {
-//			throw Server_start_exception("IN SOCKET INIT: in bind func:");
-//		}
-//
-//		if (listen(m_socket, MAX_CLIENTS) != 0) {
-//			throw Server_start_exception("IN SOCKET INIT: in listen func:");
-//		}
-//		_servers_sockets.push_back(m_socket);
 	}
 		return 0;
 }

@@ -20,14 +20,27 @@
 #include <set>
 #include <vector>
 #include <map>
+
+
 #include "../parser/Config.hpp"
 #include "../Logger/Logger.hpp"
 #include "ServerUtils.hpp"
 #include "ConnectionsSockets.hpp"
 
-struct SetCompare;
 
-#define MAX_CLIENTS 1000
+
+class ConnectionsSockets;
+
+
+// Comparator for Set
+//----------------------------------------------------------------------------//
+struct SetCompare {
+	bool operator()(const struct kevent &a, const struct kevent &b) const {
+		return a.ident < b.ident;
+	}
+};
+//----------------------------------------------------------------------------//
+
 
 class Server {
 public:
@@ -35,6 +48,7 @@ public:
 	int start();
 
 private:
+	int _socket_init();
 	int _core_loop();
 	ConnectionsSockets _connections;
 
@@ -44,16 +58,11 @@ private:
 };
 
 
-// Comparator for Set
-//----------------------------------------------------------------------------//
-struct SetCompare {
-	bool operator()(const struct kevent &a, const struct kevent &b) const {
-		return a.ident < b.ident;
-	}
 
 
-//----------------------------------------------------------------------------//
 
-};
+
+
+//};
 
 #endif //PROJECT_NAME_SERVER_HPP

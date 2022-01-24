@@ -1,3 +1,7 @@
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include "ServerUtils.hpp"
 #include "ConnectionsSockets.hpp"
 
 ConnectionsSockets::ConnectionsSockets() : _kq(kqueue()) {}
