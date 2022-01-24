@@ -1,8 +1,9 @@
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <unistd.h>
-#include "ServerUtils.hpp"
 #include "ConnectionsSockets.hpp"
+
+bool operator==(const struct kevent &a, const struct kevent &b) {
+	return a.ident == b.ident && a.data == b.data;
+}
+
 
 ConnectionsSockets::ConnectionsSockets() : _kq(kqueue()) {}
 
@@ -34,6 +35,8 @@ void ConnectionsSockets::bindSocket(int port) {
 		throw Server_start_exception("IN SOCKET INIT: in listen func:");
 	}
 
+
+
 	this->_all_events.resize(this->_all_events.size() + 1);
 	struct kevent *tmp_event = &this->_all_events.back();
 	EV_SET(tmp_event, m_socket, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, NOTE_WRITE, 0, NULL);
@@ -44,7 +47,6 @@ void ConnectionsSockets::bindSocket(int port) {
 	this->_connections.insert(this->_connections.begin(),
 			std::pair<struct kevent, SocketBase>(
 					*tmp_event, socket));
-	this->_all_events.push_back(*tmp_event);
 }
 
 
@@ -65,7 +67,6 @@ void ConnectionsSockets::acceptConnection(const struct kevent &current_event) {
 	catch (std::exception &e) {
 		throw Server_start_exception("In setting nonblock fd part\n" + std::string(e.what()));
 	}
-	this->_all_events.resize(this->_all_events.size() + 1);
 	this->_all_events.push_back(current_event);
 	this->_connections.insert(std::pair<struct kevent, SocketBase>(current_event, socket));
 }
@@ -112,7 +113,9 @@ bool ConnectionsSockets::isMainSocket(const struct kevent &current_event) {
 	return search_result_map->second.isIsMainSocket();
 }
 
-//const SocketClient &
-//ConnectionsSockets::getConnection(const struct kevent &current_event) {
-//	this->_connections[current_event]
-//}
+
+// {map}.at throw exception if can`t find the element
+const SocketBase &
+ConnectionsSockets::getConnection(const struct kevent &current_event) {
+	return this->_connections.at(current_event);
+}

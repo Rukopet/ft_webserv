@@ -2,7 +2,14 @@
 #define FT_WEBSERVER_SOCKETCLIENT_HPP
 
 #include <iostream>
+#include <sys/socket.h>
+
+
+
 #include "SocketBase.hpp"
+#include "../Logger/Logger.hpp"
+
+
 
 
 class SocketClient : public SocketBase {

@@ -1,8 +1,16 @@
 #ifndef FT_WEBSERVER_CONNECTIONSSOCKETS_HPP
 #define FT_WEBSERVER_CONNECTIONSSOCKETS_HPP
 
-#include <map>
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
 #include <vector>
+#include <map>
+
+
+#include "ServerUtils.hpp"
 #include "../Client/SocketBase.hpp"
 #include "../Client/SocketClient.hpp"
 #include "../Client/SocketMain.hpp"
@@ -15,13 +23,14 @@
 class SocketBase;
 
 
+
 struct MapCompare {
 	bool operator()(const struct kevent &a, const struct kevent &b) const {
 		return a.ident < b.ident;
 	};
 };
 
-
+//
 class ConnectionsSockets {
 public:
 	ConnectionsSockets();
@@ -31,7 +40,7 @@ public:
 	void acceptConnection(const struct kevent &current_event);
 	void deleteConnection(const struct kevent &current_event);
 	bool isMainSocket(const struct kevent &current_event);
-	const SocketClient &getConnection(const struct kevent &current_event);
+	const SocketBase &getConnection(const struct kevent &current_event);
 	void unbindPorts();
 
 	int getKq() const;

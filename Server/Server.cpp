@@ -90,6 +90,10 @@ int Server::_core_loop() {
 			}
 			else {
 				Logger::getInstance().add_line("HANDLE CLIENT");
+//	TODO			ask Diman how cast client type in C++ way
+				SocketClient &client = (SocketClient &)_connections.getConnection(
+						current_event);
+				client.handleConnection();
 
 //				int client_socket_fd = static_cast<int>(tmp_event_list[i].ident);
 //				sockaddr_in sa_client = client_address_for_sock[client_socket_fd];

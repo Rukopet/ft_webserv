@@ -6,5 +6,22 @@ SocketBase(fd, ipAddress, false, 0) {}
 SocketClient::~SocketClient() {}
 
 void SocketClient::handleConnection() {
+//	TODO fix this hardcode
+	const int MAX_BODY_SIZE = 10;
+	int len_buffer = 1048576 * MAX_BODY_SIZE;
+	char buffer[len_buffer];
+	memset(&buffer, 0, len_buffer);
 
+	size_t ret = recv(this->getFd(), &buffer, len_buffer, 0);
+	if (ret == -1) {
+		throw Server_start_exception("IN CLIENT HANDLER: while recv:");
+	}
+	buffer[ret] = '\0';
+
+	std::cout << buffer << std::endl;
+	std::string log = "\nCLIENT IP: ";
+	log += this->_ip_address;
+	log += "\n\n";
+	log += buffer;
+	Logger::getInstance().add_line(log);
 }

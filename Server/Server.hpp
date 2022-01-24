@@ -16,7 +16,6 @@
 
 // for errno and exceptions
 #include <cerrno>
-
 #include <set>
 #include <vector>
 #include <map>
@@ -24,23 +23,11 @@
 
 #include "../parser/Config.hpp"
 #include "../Logger/Logger.hpp"
-#include "ServerUtils.hpp"
 #include "ConnectionsSockets.hpp"
 
 
 
 class ConnectionsSockets;
-
-
-// Comparator for Set
-//----------------------------------------------------------------------------//
-struct SetCompare {
-	bool operator()(const struct kevent &a, const struct kevent &b) const {
-		return a.ident < b.ident;
-	}
-};
-//----------------------------------------------------------------------------//
-
 
 class Server {
 public:
@@ -53,16 +40,7 @@ private:
 	ConnectionsSockets _connections;
 
 private:
-	std::vector<int> _servers_sockets;
 	Config &_conf;
 };
-
-
-
-
-
-
-
-//};
 
 #endif //PROJECT_NAME_SERVER_HPP
