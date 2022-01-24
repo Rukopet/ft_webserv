@@ -26,6 +26,7 @@ public:
 	void acceptConnection(const struct kevent &current_event);
 	void deleteConnection(const struct kevent &current_event);
 	bool isMainSocket(const struct kevent &current_event);
+	const SocketClient &getConnection(const struct kevent &current_event);
 	void unbindPorts();
 
 	int getKq() const;

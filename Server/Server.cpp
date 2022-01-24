@@ -74,7 +74,7 @@ int Server::_core_loop() {
 			throw Server_start_exception("In _core_loop, KEVENT before loop:");
 		}
 
-		ret = kevent(kq, NULL, 0, monitor_events.data(), static_cast<int>(monitor_events.size(), NULL);
+		ret = kevent(kq, NULL, 0, monitor_events.data(), static_cast<int>(monitor_events.size()), NULL);
 		if (ret == -1) {
 			throw Server_start_exception();
 		}
@@ -89,10 +89,11 @@ int Server::_core_loop() {
 			else {
 				Logger::getInstance().add_line("HANDLE CLIENT");
 
-				int client_socket_fd = static_cast<int>(tmp_event_list[i].ident);
-				sockaddr_in sa_client = client_address_for_sock[client_socket_fd];
-				std::string client_ip = ServerUtils::_get_ip_address(sa_client);
-				_client_handler(client_socket_fd, client_ip);
+//				int client_socket_fd = static_cast<int>(tmp_event_list[i].ident);
+//				sockaddr_in sa_client = client_address_for_sock[client_socket_fd];
+//				std::string client_ip = ServerUtils::_get_ip_address(sa_client);
+//				_client_handler(client_socket_fd, client_ip);
+//				_connections
 			}
 		}
 	}

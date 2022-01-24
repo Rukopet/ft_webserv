@@ -107,3 +107,8 @@ bool ConnectionsSockets::isMainSocket(const struct kevent &current_event) {
 	search_result_map = this->_connections.find(current_event);
 	return search_result_map->second.isIsMainSocket();
 }
+
+//const SocketClient &
+//ConnectionsSockets::getConnection(const struct kevent &current_event) {
+//	this->_connections[current_event]
+//}

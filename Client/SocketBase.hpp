@@ -4,7 +4,6 @@
 #include <sys/event.h>
 #include <sys/fcntl.h>
 #include "Request.hpp"
-#include "../Server/Server.hpp"
 
 class SocketBase {
 public:
