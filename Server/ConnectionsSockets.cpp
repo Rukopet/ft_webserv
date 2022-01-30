@@ -45,9 +45,9 @@ void ConnectionsSockets::bindSocket(int port) {
 	SocketMain	socket(port, m_socket);
 	socket.setNonBlock();
 
-	this->_connections.insert(this->_connections.begin(),
-			std::pair<struct kevent, SocketBase>(
-					tmp_event, socket));
+	this->_connections.insert(
+			std::pair<int, SocketBase>(
+					static_cast<int>(tmp_event.ident), socket));
 	this->_all_events.push_back(tmp_event);
 }
 
@@ -70,7 +70,7 @@ void ConnectionsSockets::acceptConnection(const struct kevent &current_event) {
 		throw Server_start_exception("In setting nonblock fd part\n" + std::string(e.what()));
 	}
 	this->_all_events.push_back(current_event);
-	auto add = std::pair<struct kevent, SocketBase>(current_event, socket);
+	auto add = std::pair<int, SocketBase>(client_socket, socket);
 	this->_connections.insert(add);
 }
 
@@ -89,9 +89,9 @@ void ConnectionsSockets::deleteConnection(const struct kevent &current_event) {
 	}
 	this->_all_events.erase(search_result_vector);
 
-	std::map<struct kevent, SocketBase, MapCompare>::iterator search_result_map;
+	std::map<int, SocketBase>::iterator search_result_map;
 	try {
-		search_result_map = this->_connections.find(current_event);
+		search_result_map = this->_connections.find(static_cast<int>(current_event.ident));
 	}
 	catch (std::exception &e) {
 		throw e;
@@ -111,8 +111,8 @@ const std::vector<struct kevent> &ConnectionsSockets::getEvents() const {
 
 bool ConnectionsSockets::isMainSocket(const struct kevent &current_event) {
 
-	std::map<struct kevent, SocketBase, MapCompare>::iterator search_result_map;
-	search_result_map = this->_connections.find(current_event);
+	std::map<int, SocketBase>::iterator search_result_map;
+	search_result_map = this->_connections.find(static_cast<int>(current_event.ident));
 	return search_result_map->second.isIsMainSocket();
 }
 
@@ -120,5 +120,5 @@ bool ConnectionsSockets::isMainSocket(const struct kevent &current_event) {
 // {map}.at throw exception if can`t find the element
 const SocketBase &
 ConnectionsSockets::getConnection(const struct kevent &current_event) {
-	return this->_connections.at(current_event);
+	return this->_connections.at(static_cast<int>(current_event.ident));
 }

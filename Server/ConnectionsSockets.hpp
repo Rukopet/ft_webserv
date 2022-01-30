@@ -24,11 +24,11 @@ class SocketBase;
 
 
 
-struct MapCompare {
-	bool operator()(const struct kevent &a, const struct kevent &b) const {
-		return a.ident < b.ident;
-	};
-};
+//struct MapCompare {
+//	bool operator()(const struct kevent &a, const struct kevent &b) const {
+//		return a.ident < b.ident;
+//	};
+//};
 
 //
 class ConnectionsSockets {
@@ -47,7 +47,7 @@ public:
 	const std::vector<struct kevent> &getEvents() const;
 
 private:
-	std::map<struct kevent, SocketBase, MapCompare>	_connections;
+	std::map<int, SocketBase>			_connections;
 	std::vector<struct kevent>						_all_events;
 	int 											_kq;
 };
