@@ -74,7 +74,8 @@ int Server::_core_loop() {
 			throw Server_start_exception("In _core_loop, KEVENT before loop:");
 		}
 
-		ret = kevent(kq, NULL, 0, const_cast<struct kevent *>(monitor_events.data()),
+		const struct kevent *data = monitor_events.data();
+		ret = kevent(kq, NULL, 0, const_cast<struct kevent *>(data),
 				static_cast<int>(monitor_events.size()), NULL);
 
 		if (ret == -1) {

@@ -16,7 +16,6 @@ void SocketClient::handleConnection() {
 	if (ret == -1) {
 		throw Server_start_exception("IN CLIENT HANDLER: while recv:");
 	}
-	std::cout << 1111 << std::endl;
 	buffer[ret] = '\0';
 
 	std::cout << buffer << std::endl;

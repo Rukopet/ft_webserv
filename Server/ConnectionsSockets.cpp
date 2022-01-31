@@ -71,7 +71,7 @@ void ConnectionsSockets::acceptConnection(const struct kevent &current_event) {
 		throw Server_start_exception("In setting nonblock fd part\n" + std::string(e.what()));
 	}
 	this->_all_events.resize(this->_all_events.size() + 1);
-	EV_SET(&this->_all_events.back(), client_socket, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, NOTE_WRITE, 0, NULL);
+	EV_SET(&this->_all_events.back(), client_socket, EVFILT_READ, EV_ADD | EV_ENABLE | EV_EOF, EVFILT_READ, 0, NULL);
 	auto add = std::pair<int, SocketBase>(client_socket, socket);
 	this->_connections.insert(add);
 }
